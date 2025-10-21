@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 			return APIResponse({
 				success: false,
 				message: data.message || "Error registering user",
-				data: data,
+				data: {},
 				status: 400,
 			});
 		}
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 					success: false,
 					message:
 						"User with this email already exists, please login or use another email",
-					data: { email },
+					data: {},
 					status: 400,
 				});
 			}
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 					success: false,
 					message:
 						"A user with this email is already registered, please check your email to verify your account",
-					data: { email },
+					data: {},
 					status: 400,
 				});
 			}
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 				return APIResponse({
 					success: false,
 					message: "User with this username already exists",
-					data: { username },
+					data: {},
 					status: 400,
 				});
 			}
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
 
 		return APIResponse({
 			success: false,
-			message: "Internal Error ",
+			message: "Internal Error",
 			data: { error },
 			status: 500,
 		});
