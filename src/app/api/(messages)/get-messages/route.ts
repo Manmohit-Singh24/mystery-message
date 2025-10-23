@@ -5,6 +5,24 @@ import { User } from "@/models/user.model";
 import { Message } from "@/models/message.model";
 import { APIResponse } from "@/lib/APIResponse";
 import { NextRequest } from "next/server";
+import mongoose from "mongoose";
+
+interface projectType {
+	_id: number;
+	content: number;
+	createdAt: number;
+	sender?: object;
+	receiver?: object;
+	isAnonymous?: number;
+	// anotherUserData?: number;
+}
+
+interface lookupType {
+	from: string;
+	localField?: string;
+	foreignField: string;
+	as: string;
+}
 
 export async function GET(req: NextRequest) {
 	await dbConnect();
@@ -30,6 +48,10 @@ export async function GET(req: NextRequest) {
 			status: 400,
 		});
 	}
+
+	const limit = 5;
+	const cursor = req.nextUrl.searchParams.get("cursor");
+
 	try {
 		const foundUser = await User.findById(user._id);
 
@@ -42,48 +64,80 @@ export async function GET(req: NextRequest) {
 			});
 		}
 
+		const match = { [role]: foundUser._id };
+		if (cursor) {
+			match._id = { $lt: new mongoose.Types.ObjectId(cursor) };
+		}
+
+		const lookup: lookupType = {
+			from: "users",
+			foreignField: "_id",
+			as: "anotherUserData",
+		};
+
+		const project: projectType = {
+			_id: 1,
+			content: 1,
+			createdAt: 1,
+		};
+
+		if (role === "receiver") {
+			lookup.localField = "sender";
+			project.sender = {
+				$cond: {
+					if: { $eq: ["$isAnonymous", true] },
+					then: {
+						_id: null,
+						username: "Anonymous",
+						name: "Anonymous",
+					},
+					else: {
+						_id: "$sender",
+						username: {
+							$ifNull: ["$anotherUserData.username", "User Deleted"],
+						},
+						name: {
+							$ifNull: ["$anotherUserData.name", "User Deleted"],
+						},
+					},
+				},
+			};
+		} else {
+			lookup.localField = "receiver";
+			project.receiver = {
+				_id: "$receiver",
+				username: {
+					$ifNull: ["$anotherUserData.username", "User Deleted"],
+				},
+				name: {
+					$ifNull: ["$anotherUserData.name", "User Deleted"],
+				},
+			};
+		}
+
 		const messages = await Message.aggregate([
-			{ $match: { [role]: foundUser._id } },
-			{ $sort: { createdAt: 1 } },
+			{ $match: match },
+			{ $sort: { createdAt: -1 } },
+			{ $limit: limit + 1 }, // fetch one extra to see if there’s more
+			{ $lookup: lookup },
 			{
-				$lookup: {
-					from: "users",
-					localField: "sender",
-					foreignField: "_id",
-					as: "senderUsername", // will return an array of users
-				},
+				$unwind: { path: "$anotherUserData", preserveNullAndEmptyArrays: true }, // convert array to single object
 			},
-			{
-				$unwind: "$senderUsername", // convert array to single object
-			},
-			{
-				$project: {
-					_id: 1,
-					content: 1,
-					createdAt: 1,
-					sender: {
-						$cond: {
-							if: { $eq: ["$isAnonymous", true] },
-							then: "Anonymous",
-							else: "$sender",
-						},
-					},
-					senderUsername: {
-						$cond: {
-							if: { $eq: ["$isAnonymous", true] },
-							then: "Anonymous",
-							else: "$senderUsername.username",
-						},
-					},
-				},
-			},
+			{ $project: project },
 		]);
+
+		let nextCursor = null;
+		if (messages.length > limit) {
+			messages.pop(); // removing that extra msg
+			nextCursor = messages[messages.length - 1]._id;
+		}
 
 		return APIResponse({
 			success: true,
 			message: "User's messages fetched successfully",
 			data: {
 				messages,
+				nextCursor,
 			},
 			status: 200,
 		});
