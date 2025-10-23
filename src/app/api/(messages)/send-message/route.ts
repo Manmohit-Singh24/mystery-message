@@ -5,7 +5,7 @@ import { User } from "@/models/user.model";
 import { Message } from "@/models/message.model";
 import { NextRequest } from "next/server";
 import { APIResponse } from "@/lib/APIResponse";
-
+import { messageReqSchema } from "@/schemas/message.schema";
 export async function POST(req: NextRequest) {
 	await dbConnect();
 
@@ -20,12 +20,23 @@ export async function POST(req: NextRequest) {
 	}
 
 	const userId = session.user._id;
-	const {
-		content,
-		receiver,
-		isAnonymous = false,
-		isTruelyAnonymous = false,
-	} = await req.json();
+	const isGuest = userId === "guest";
+
+	const body = await req.json();
+
+	const validateRes = messageReqSchema.safeParse(body);
+
+	if (!validateRes.success) {
+		const data = JSON.parse(validateRes.error.message)[0];
+		return APIResponse({
+			success: false,
+			message: data.message || "Invalid message format",
+			data: data,
+			status: 400,
+		});
+	}
+
+	const { content, receiver, isAnonymous, isTrulyAnonymous } = body;
 
 	if (!receiver || receiver === userId) {
 		return APIResponse({
@@ -46,8 +57,8 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const foundUser = await User.findById(userId);
-		if (!foundUser) {
+		const foundSender = isGuest ? { _id: null } : await User.findById(userId);
+		if (!foundSender) {
 			return APIResponse({
 				success: false,
 				message: "User not found",
@@ -76,10 +87,10 @@ export async function POST(req: NextRequest) {
 
 		const message = new Message({
 			content,
-			sender: isTruelyAnonymous ? null : foundUser._id,
+			sender: isTrulyAnonymous ? null : foundSender._id,
 			receiver: foundReceiver._id,
-			isAnonymous : isTruelyAnonymous || isAnonymous, // should be true too if msg is truely anonymous
-			isTruelyAnonymous,
+			isAnonymous: isGuest || isAnonymous || isTrulyAnonymous,
+			isTrulyAnonymous: isGuest || isTrulyAnonymous,
 			createdAt: new Date(),
 		});
 

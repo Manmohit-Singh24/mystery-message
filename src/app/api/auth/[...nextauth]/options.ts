@@ -17,8 +17,8 @@ export const authOptions: NextAuthOptions = {
 				await dbConnect();
 
 				try {
-                    const { identifier, password } = credentials;
-                    
+					const { identifier, password } = credentials;
+
 					const user = await User.findOne({
 						$or: [{ email: identifier }, { username: identifier }],
 					});
@@ -40,6 +40,21 @@ export const authOptions: NextAuthOptions = {
 					throw new Error(error);
 				}
 			},
+		}),
+		CredentialsProvider({
+			id: "guest",
+			name: "guest",
+			credentials: {},
+            async authorize(): Promise<any> {
+                return {
+                    _id: "guest",
+                    email: "guest@mystery-message.local",
+                    username: "guest",
+                    name: "Guest User",
+                    isVerified: true,
+                    isAcceptingMessage: false,
+                };
+            },
 		}),
 	],
 	callbacks: {

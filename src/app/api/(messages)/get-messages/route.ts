@@ -14,7 +14,7 @@ interface projectType {
 	sender?: object;
 	receiver?: object;
 	isAnonymous?: number;
-	// anotherUserData?: number;
+	isTrulyAnonymous?: number;
 }
 
 interface lookupType {
@@ -37,7 +37,16 @@ export async function GET(req: NextRequest) {
 			status: 401,
 		});
 	}
-	const user = session.user;
+	const userId = session.user._id;
+
+	if (userId === "guest") {
+		return APIResponse({
+			success: false,
+			message: "No messages for guest user",
+			data: {},
+			status: 200,
+		});
+	}
 
 	const role = req.nextUrl.searchParams.get("role");
 	if (!role || (role !== "receiver" && role !== "sender")) {
@@ -49,11 +58,11 @@ export async function GET(req: NextRequest) {
 		});
 	}
 
-	const limit = 5;
+	const limit = 10;
 	const cursor = req.nextUrl.searchParams.get("cursor");
 
 	try {
-		const foundUser = await User.findById(user._id);
+		const foundUser = await User.findById(userId);
 
 		if (!foundUser) {
 			return APIResponse({
@@ -79,6 +88,8 @@ export async function GET(req: NextRequest) {
 			_id: 1,
 			content: 1,
 			createdAt: 1,
+			isAnonymous: 1,
+			isTrulyAnonymous: 1,
 		};
 
 		if (role === "receiver") {

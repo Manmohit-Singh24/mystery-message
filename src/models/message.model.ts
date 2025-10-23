@@ -5,7 +5,7 @@ export interface Message extends Document {
 	sender?: mongoose.Schema.Types.ObjectId ;
     receiver: mongoose.Schema.Types.ObjectId;
     isAnonymous: boolean;
-    isTruelyAnonymous: boolean;
+    isTrulyAnonymous: boolean;
 	createdAt: Date;
 }
 
@@ -28,7 +28,7 @@ const MessageSchema: Schema<Message> = new Schema({
         type: Boolean,
         default: false,
     },
-    isTruelyAnonymous: {
+    isTrulyAnonymous: {
         type: Boolean,
         default: false,
     },

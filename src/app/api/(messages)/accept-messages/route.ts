@@ -17,10 +17,17 @@ export async function POST(req: NextRequest) {
 			status: 401,
 		});
 	}
+	const userId = session.user._id;
 
-	const user = session.user;
+	if (userId === "guest") {
+		return APIResponse({
+			success: false,
+			message: "Guest user cannot change message acceptance status",
+			data: {},
+			status: 401,
+		});
+	}
 
-	const userId = user._id;
 	const { acceptMessages } = await req.json();
 
 	try {
