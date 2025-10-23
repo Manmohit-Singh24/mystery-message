@@ -2,8 +2,10 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
 	content: string;
-	sender: mongoose.Schema.Types.ObjectId;
-	receiver: mongoose.Schema.Types.ObjectId;
+	sender?: mongoose.Schema.Types.ObjectId ;
+    receiver: mongoose.Schema.Types.ObjectId;
+    isAnonymous: boolean;
+    isTruelyAnonymous: boolean;
 	createdAt: Date;
 }
 
@@ -13,16 +15,26 @@ const MessageSchema: Schema<Message> = new Schema({
 		required: true,
 	},
 	sender: {
-		type: mongoose.Schema.Types.ObjectId,
-		required: true,
-	},
+        type: mongoose.Schema.Types.ObjectId ,
+        ref: "User",
+        required: false,
+    },
 	receiver: {
-		type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
 		required: true,
-	},
+    },
+    isAnonymous: {
+        type: Boolean,
+        default: false,
+    },
+    isTruelyAnonymous: {
+        type: Boolean,
+        default: false,
+    },
 	createdAt: {
 		type: Date,
-		default: Date.now,
+		default: Date.now(),
 	},
 });
 
