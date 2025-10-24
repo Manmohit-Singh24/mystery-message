@@ -5,24 +5,7 @@ import { User } from "@/models/user.model";
 import { Message } from "@/models/message.model";
 import { APIResponse } from "@/lib/APIResponse";
 import { NextRequest } from "next/server";
-import mongoose from "mongoose";
-
-interface projectType {
-	_id: number;
-	content: number;
-	createdAt: number;
-	sender?: object;
-	receiver?: object;
-	isAnonymous?: number;
-	isTrulyAnonymous?: number;
-}
-
-interface lookupType {
-	from: string;
-	localField?: string;
-	foreignField: string;
-	as: string;
-}
+import { getMessagesPipeline } from "./pipelines";
 
 export async function GET(req: NextRequest) {
 	await dbConnect();
@@ -73,69 +56,14 @@ export async function GET(req: NextRequest) {
 			});
 		}
 
-		const match = { [role]: foundUser._id };
-		if (cursor) {
-			match._id = { $lt: new mongoose.Types.ObjectId(cursor) };
-		}
+		const pipeline = getMessagesPipeline({
+			role,
+			userId: foundUser._id as string,
+			cursor,
+			limit: limit + 1, // fetching one extra to see if there’s more
+		});
 
-		const lookup: lookupType = {
-			from: "users",
-			foreignField: "_id",
-			as: "anotherUserData",
-		};
-
-		const project: projectType = {
-			_id: 1,
-			content: 1,
-			createdAt: 1,
-			isAnonymous: 1,
-			isTrulyAnonymous: 1,
-		};
-
-		if (role === "receiver") {
-			lookup.localField = "sender";
-			project.sender = {
-				$cond: {
-					if: { $eq: ["$isAnonymous", true] },
-					then: {
-						_id: null,
-						username: "Anonymous",
-						name: "Anonymous",
-					},
-					else: {
-						_id: "$sender",
-						username: {
-							$ifNull: ["$anotherUserData.username", "User Deleted"],
-						},
-						name: {
-							$ifNull: ["$anotherUserData.name", "User Deleted"],
-						},
-					},
-				},
-			};
-		} else {
-			lookup.localField = "receiver";
-			project.receiver = {
-				_id: "$receiver",
-				username: {
-					$ifNull: ["$anotherUserData.username", "User Deleted"],
-				},
-				name: {
-					$ifNull: ["$anotherUserData.name", "User Deleted"],
-				},
-			};
-		}
-
-		const messages = await Message.aggregate([
-			{ $match: match },
-			{ $sort: { createdAt: -1 } },
-			{ $limit: limit + 1 }, // fetch one extra to see if there’s more
-			{ $lookup: lookup },
-			{
-				$unwind: { path: "$anotherUserData", preserveNullAndEmptyArrays: true }, // convert array to single object
-			},
-			{ $project: project },
-		]);
+		const messages = await Message.aggregate(pipeline);
 
 		let nextCursor = null;
 		if (messages.length > limit) {
