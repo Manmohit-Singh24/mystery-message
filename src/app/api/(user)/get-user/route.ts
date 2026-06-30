@@ -2,6 +2,7 @@ import { User } from "@/models/user.model";
 import { APIResponse, safeUserResponse } from "@/lib/APIResponse";
 import { validateSession } from "@/lib/validateSession";
 import { NextRequest } from "next/server";
+import mongoose from "mongoose";
 
 const RESPONSES = {
 	SUCCESS: (data: object) => ({
@@ -9,6 +10,11 @@ const RESPONSES = {
 		message: "User found",
 		status: 200,
 		data,
+	}),
+	INVALID_USERID: (msg?: string) => ({
+		success: false,
+		message: msg || "Invalid UserId format",
+		status: 400,
 	}),
 	INTERNAL_ERROR: {
 		success: false,
@@ -37,7 +43,10 @@ export async function GET(req: NextRequest) {
 				})
 			);
 
-		const foundUser = await User.findOne({ "_id" :  userId});
+		if (!mongoose.isValidObjectId(userId))
+			return APIResponse(RESPONSES.INVALID_USERID());
+
+		const foundUser = await User.findById(userId);
 		if (!foundUser) return APIResponse(RESPONSES.INTERNAL_ERROR);
 
 		return APIResponse(

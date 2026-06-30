@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 	await dbConnect();
 
 	try {
-		const email = req.nextUrl.searchParams.get("email");
+		const email = req.nextUrl.searchParams.get("email")?.trim().toLowerCase();
 
 		if (!email) return APIResponse(RESPONSES.INVALID_REQUEST());
 

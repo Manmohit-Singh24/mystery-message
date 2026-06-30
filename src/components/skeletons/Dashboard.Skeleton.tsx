@@ -5,7 +5,7 @@ import ProfileHeaderSkeleton from "./ProfileHeader.Skeleton";
 import { Spinner } from "../ui/spinner";
 export default function () {
 	return (
-		<div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-background rounded w-full max-w-6xl">
+		<>
 			{/* Title */}
 			<Skeleton className="h-8 w-48 mb-4" />
 
@@ -35,6 +35,6 @@ export default function () {
 				))}
 			</div>
 			<Spinner className="mt-4 mx-auto size-8 opacity-30" />
-		</div>
+		</>
 	);
 }

@@ -29,8 +29,9 @@ export const authOptions: NextAuthOptions = {
 					if (session && session.user._id !== "guest")
 						throw new Error("You are already logged in.");
 
-					const { identifier, password } = credentials;
-
+					const { identifier :reqIdentifier, password } = credentials;
+                    const identifier = reqIdentifier.trim().toLowerCase();
+                    
 					const user = await User.findOne({
 						$or: [{ email: identifier }, { username: identifier }],
 					});

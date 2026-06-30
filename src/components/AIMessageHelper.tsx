@@ -86,7 +86,7 @@ export function AIMessageHelper({
 
     const handleGenerate = async () => {
         if (!prompt) return toast.warning("Write something first!");
-        if (prompt.length < 10) return toast.warning("Your input is too short.");
+        if (prompt.length < 20) return toast.warning("Your input is too short.");
 
 		if (!prompt.trim()) return toast.warning("Write something first!");
 		await complete(JSON.stringify({ prompt, mode }));
@@ -113,7 +113,7 @@ export function AIMessageHelper({
 					onChange={(e) => setPrompt(e.target.value)}
 					className="flex-1"
 				/>
-				<div className="flex justify-between">
+				<div className="flex flex-col sm:flex-row justify-between gap-3">
 					<Select value={mode} onValueChange={setMode}>
 						<SelectTrigger className="w-50">
 							<SelectValue placeholder="Choose tone" />
@@ -132,7 +132,7 @@ export function AIMessageHelper({
 						</SelectContent>
 					</Select>
 
-					<Button className="w-32" onClick={handleGenerate} disabled={isLoading}>
+					<Button className="w-50 sm:w-32" onClick={handleGenerate} disabled={isLoading}>
 						{isLoading ? "Thinking..." : "Generate"}
 					</Button>
 				</div>

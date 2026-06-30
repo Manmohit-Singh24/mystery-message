@@ -204,13 +204,13 @@ export default function () {
 	return isLoading ? (
 		<DashboardSkeleton />
 	) : (
-		<div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-background rounded w-full max-w-6xl space-y-5">
+		<>
 			<h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 			<ProfileHeader />
 
-			<Separator />
+			<Separator className="mt-6"/>
 
-			<Tabs defaultValue={currentTab}>
+			<Tabs defaultValue={currentTab} className="mt-6">
 				<TabsList className="py-5 mx-auto bg-foreground dark:bg-foreground/80 rounded-4xl ">
 					<TabsTrigger
 						onClick={() => setCurrentTab("received")}
@@ -279,7 +279,7 @@ export default function () {
 					/>
 				</TabsContent>
 			</Tabs>
-		</div>
+		</>
 	);
 }
 

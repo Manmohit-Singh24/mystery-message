@@ -133,6 +133,12 @@ export default function () {
 						occured
 					</span>
 				)}
+
+				{receiverId === user?._id && (
+					<span className="text-destructive">
+						You can't send message to yourself
+					</span>
+				)}
 			</div>
 
 			<Card className="w-full gap-1 ">
@@ -189,18 +195,26 @@ export default function () {
 													</FieldError>
 												)}
 											</FieldLabel>
-											<Textarea
-												{...field}
-												placeholder="Type your anonymous message here..."
-												className="min-h-[120px] resize-none"
-												disabled={isSending || !receiver.isAcceptingMessage}
-											/>
-											<FieldDescription
-												className={`${contentCounter < 10 || contentCounter > 500 ? "text-red-500" : ""}`}
-											>
-												{contentCounter} / 500
-											</FieldDescription>
-
+											<div className="relative">
+												<Textarea
+													{...field}
+													placeholder="Type your anonymous message here..."
+													className="min-h-[120px] resize-none"
+													disabled={isSending || !receiver.isAcceptingMessage}
+												/>
+												<div className="absolute bottom-1 right-2 text-xs flex items-center gap-1">
+													<InfoTooltip content="Message should be between 10 and 500 characters long" />
+													<FieldDescription
+														className={
+															contentCounter < 10 || contentCounter > 500
+																? "text-red-500"
+																: ""
+														}
+													>
+														{contentCounter} / 500
+													</FieldDescription>
+												</div>
+											</div>
 											<FieldError>
 												{form.formState.errors.content?.message}
 											</FieldError>
@@ -330,7 +344,7 @@ export default function () {
 					</Button>
 				</Link>
 			</div>
-		</div>
+		</>
 	);
 }
 

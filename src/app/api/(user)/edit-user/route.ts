@@ -2,6 +2,7 @@ import { APIResponse } from "@/lib/APIResponse";
 import { validateSession } from "@/lib/validateSession";
 import { editProfileSchema } from "@/schemas/auth.schema";
 import { NextRequest } from "next/server";
+import { User } from "@/models/user.model";
 
 const RESPONSES = {
 	SUCCESS: {
@@ -37,9 +38,15 @@ export async function PATCH(req: NextRequest) {
             return APIResponse(RESPONSES.INVALID_REQUEST(zodErrorMsg));
         }
 
+        const username = body.username.trim().toLowerCase();
+        const usernameExists = await User.findOne({ username });
+
+        if (usernameExists && usernameExists._id !== user._id)
+            return APIResponse(RESPONSES.INVALID_REQUEST("Username already exists"));
+
         const updatedUser = await user.updateOne({
-            username: body.username,
-            name: body.name,
+            username: username,
+            name: body.name.trim(),
         });
 
 		if (updatedUser.modifiedCount === 0)
