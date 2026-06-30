@@ -112,7 +112,7 @@ export default function () {
 	return isLoading ? (
 		<SendMessageSkeleton />
 	) : (
-		<>
+		<div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-background rounded w-full max-w-6xl">
 			<div className=" mb-4">
 				<h1 className="text-4xl font-bold">
 					{receiver.username ? (

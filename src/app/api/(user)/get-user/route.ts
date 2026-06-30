@@ -2,7 +2,6 @@ import { User } from "@/models/user.model";
 import { APIResponse, safeUserResponse } from "@/lib/APIResponse";
 import { validateSession } from "@/lib/validateSession";
 import { NextRequest } from "next/server";
-import { usernameValidation } from "@/schemas/auth.schema";
 import mongoose from "mongoose";
 
 const RESPONSES = {
@@ -26,8 +25,8 @@ const RESPONSES = {
 
 export async function GET(req: NextRequest) {
 	try {
-		const sessionValidationRes = await validateSession({ allowGuest: true });
-
+        const sessionValidationRes = await validateSession({ allowGuest: true });
+        
 		if (!sessionValidationRes.success) return APIResponse(sessionValidationRes);
 
 		const { user } = sessionValidationRes.data as any;
