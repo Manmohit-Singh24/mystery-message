@@ -1,69 +1,151 @@
-<h1 align="center"><img style="width: 60px; height: 60px;" src="public/icon-light.svg" alt="Just-Say"> <br/> Just-Say </h1>
+<h1 align="center">
+  <img src="public/icon-light.svg" alt="Just-Say" width="60px" />
+  <br />
+  Just-Say
+</h1>
 
-<p align="center"><i>“Don’t gossip — just say it”</i></p>
+<p align="center">
+  <b>Don't gossip, just say it.</b>
+</p>
 
-Live Demo : [just-say-manmohit.vercel.app](just-say-manmohit.vercel.app)
-## 🧭 what’s this?
+<p align="center">
+  A link-based messaging platform supporting authenticated, anonymous, and truly anonymous conversations.
+</p>
 
-A small anonymous messaging web app — kinda like NGL, but built for fun.  
+<p align="center">
+  <a href="https://just-say-m24.vercel.app/">Live Demo</a>
+</p>
 
-I started it as a **Next.js project from the [Chai aur Code tutorials](https://youtu.be/28-fJmm_ONQ?si=5FSekzrMx7MML_6h)**,  
-and then just… went off-road with it.  
-(By the way , it was a great tutorial by [@Hitesh Choudhary ](https://github.com/hiteshchoudhary) Sir)
+## Overview
 
-Now it’s got my own logic, structure, and way of doing things.
+Just-Say is a full-stack, shareable link-based messaging platform where users receive messages through their personalized public link. The platform extends the traditional anonymous messaging concept by supporting three distinct communication modes:
 
-It’s fully working btw — not some half-done side project.
+- **Authenticated** – the sender's identity is visible to the recipient.
+- **Anonymous** – authenticated users can hide their identity while the system still maintains sender information.
+- **Truly Anonymous** – messages are stored without any association to a sender, ensuring the sender's identity cannot be recovered later.
 
-The UI is okay-ish (used plain shadcn components), the main focus was on backend side because never practiced backend properly before.
+Beyond messaging, Just-Say provides complete user management workflows including email verification, account activation, password reset, guest logins, JWT-based session management, and login alerts.
 
----
-
-## ⚙️ what it does
-
-- lets you create a user and get a unique link
-- people can send you anonymous or non-anonymous messages
-- you can view the messages you sent and received in your dashboard
-- works fine on mobile too (by luck,I haven't actually worked on responsiveness yet)
-- authentication is handled with NextAuth.js
-- backend is on Next.js itself (no separate server)
-- everything stored in MongoDB
-- has integration with Gemini api for message generation usign vercel's AI sdk
+Users can manage sent and received messages through personalized dashboards featuring cursor-based pagination, delivery/read tracking, configurable message acceptance, AI-assisted message generation using the Gemini API, and backend APIs powered by MongoDB aggregation pipelines with Zod-based request validation.
 
 ---
 
-## 🚀 ideas for future
+## Features
 
-There’s a lot that can be improved or added. Some ideas I’ve parked for later:
+### Messaging
 
-- 🔒 **make it E2E encrypted**
-- 🪶 **add a proper message screen** (like NGL-style replies people can post on social media)
-- 🗂️ **“folder” system for messages**
-  - user can create folders.
-  - each folder gets a unique link
-  - messages sent via that link go into that folder
-  - helps manage different message contexts
-- 👤 **social-style profiles**
-  - search for users by username
-  - message them directly without needing their shared link
+- Shareable public profile links for receiving messages
+- Three messaging modes:
+  - **Authenticated** – sender identity is visible
+  - **Anonymous** – sender identity is hidden from the recipient
+  - **Truly Anonymous** – messages are stored without any sender association
+- AI-assisted message generation powered by the Gemini API
+- Delivery and read status tracking
+- Sender and receiver message management
+- Configurable message acceptance controls
 
----
-
-## 💡 random extra ideas
-
-- emoji reactions on messages
-- small dashboard showing stats like message count
-- reply threads (mini chat vibe)
-- custom themes
-- anonymous polls
+| Feature                              | Authenticated | Anonymous | Truly Anonymous |
+| ------------------------------------ | :-----------: | :-------: | :-------------: |
+| Sender visible to recipient          |      ✅       |    ❌     |       ❌        |
+| Sender identity stored by the system |      ✅       |    ✅     |       ❌        |
+| Delete for Everyone                  |      ✅       |    ✅     |       ❌        |
 
 ---
 
-## 🧩 current state
+### User Management
 
-> ✅ working and functional  
-> 🧑‍💻 built mostly for learning  
-> 🎨 UI is okay, theming can be better, will keeping adding to it
-> 💭 lots of ideas waiting for free weekends
+- User registration and authentication
+- Email verification and account activation
+- Guest login support
+- JWT-based session management
+- Password reset workflow
+- Login notifications via email
 
 ---
+
+### Dashboard
+
+- Personalized user dashboard
+- View sent and received messages
+- Cursor-based pagination for efficient message browsing
+- Manage incoming and outgoing messages
+
+---
+
+### Backend
+
+- RESTful API routes built with Next.js
+- MongoDB aggregation pipelines for efficient data retrieval
+- Zod-based request validation
+- Modular utility functions for authentication, email, and API responses
+
+---
+
+## Tech Stack
+
+| Category           | Technologies                                        | Purpose                                                     |
+| ------------------ | --------------------------------------------------- | ----------------------------------------------------------- |
+| **Frontend**       | Next.js, React, TypeScript, Tailwind CSS, shadcn/ui | User interface and client-side interactions                 |
+| **Backend**        | Next.js API Routes                                  | Backend APIs and business logic                             |
+| **Database**       | MongoDB, Mongoose                                   | Data modeling and persistence                               |
+| **Authentication** | NextAuth.js, JWT                                    | User authentication and session management                  |
+| **Validation**     | Zod                                                 | Request validation and schema enforcement                   |
+| **AI Integration** | Google Gemini API, Vercel AI SDK                    | AI-assisted message generation                              |
+| **Email**          | Nodemailer, React Email                             | Verification, password reset, and login notification emails |
+| **Deployment**     | Vercel                                              | Application hosting and deployment                          |
+
+---
+
+## Running Locally
+
+### Prerequisites
+
+- Node.js
+- MongoDB
+- pnpm
+
+### Installation
+
+```bash
+git clone https://github.com/manmohit-24/just-say.git
+cd just-say
+pnpm install
+```
+
+### Configure Environment Variables
+
+Create a `.env` file in the project root by copying the example file:
+
+```bash
+cp .env.sample .env
+```
+
+Then configure the following environment variables:
+
+| Variable                       | Description                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| `MONGODB_URI`                  | MongoDB connection string                                                   |
+| `NEXTAUTH_SECRET`              | Secret used to sign and encrypt authentication sessions                     |
+| `NEXT_PUBLIC_APP_URL`          | Public URL of the application (e.g. `http://localhost:3000` in development) |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | API key for Google Gemini AI                                                |
+| `GMAIL_USER`                   | Gmail account used to send transactional emails                             |
+| `GMAIL_PASS`                   | Gmail App Password used by Nodemailer                                       |
+| `SUPPORT_EMAIL`                | Contact email displayed in application emails                               |
+
+### Start the Development Server
+
+```bash
+pnpm dev
+```
+
+The application will be available at: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Acknowledgements
+
+This project was initially inspired by Hitesh Choudhary's Next.js tutorial series. While the tutorial provided the starting point, the application has since evolved with custom messaging workflows, authentication features, AI integration, and backend logic.
+
+---
+
+If you have suggestions, encounter a bug, or would like to contribute, feel free to open an issue or submit a pull request.
