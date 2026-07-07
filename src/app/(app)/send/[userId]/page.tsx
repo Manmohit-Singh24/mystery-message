@@ -344,7 +344,7 @@ export default function () {
 					</Button>
 				</Link>
 			</div>
-		</>
+		</div>
 	);
 }
 
