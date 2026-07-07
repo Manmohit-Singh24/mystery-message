@@ -2,9 +2,9 @@
   "name": "just-say",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @just-say/legacy dev",
-    "build": "pnpm --filter @just-say/legacy build",
-    "lint": "pnpm --filter @just-say/legacy lint"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint"
   },
   "devEngines": {
     "packageManager": {
@@ -12,5 +12,8 @@
       "version": "11.9.0",
       "onFail": "download"
     }
+  },
+  "devDependencies": {
+    "turbo": "^2.10.4"
   }
 }
