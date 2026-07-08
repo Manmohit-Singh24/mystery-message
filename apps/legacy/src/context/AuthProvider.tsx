@@ -5,5 +5,5 @@ import { SessionProvider } from "next-auth/react";
 // Can't directly implement in layout.tsx as it's a client component.
 
 export default function AuthProvider({ children }: any) {
-	return <SessionProvider>{children}</SessionProvider>;
+  return <SessionProvider>{children}</SessionProvider>;
 }

@@ -5,58 +5,57 @@ import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 
 const RESPONSES = {
-	SUCCESS: (data: object) => ({
-		success: true,
-		message: "User found",
-		status: 200,
-		data,
-	}),
-	INVALID_USERID: (msg?: string) => ({
-		success: false,
-		message: msg || "Invalid UserId format",
-		status: 400,
-	}),
-	INTERNAL_ERROR: {
-		success: false,
-		message: "Some internal error occurred while getting user",
-		status: 500,
-	},
+  SUCCESS: (data: object) => ({
+    success: true,
+    message: "User found",
+    status: 200,
+    data,
+  }),
+  INVALID_USERID: (msg?: string) => ({
+    success: false,
+    message: msg || "Invalid UserId format",
+    status: 400,
+  }),
+  INTERNAL_ERROR: {
+    success: false,
+    message: "Some internal error occurred while getting user",
+    status: 500,
+  },
 };
 
 export async function GET(req: NextRequest) {
-	try {
-        const sessionValidationRes = await validateSession({ allowGuest: true });
-        
-		if (!sessionValidationRes.success) return APIResponse(sessionValidationRes);
+  try {
+    const sessionValidationRes = await validateSession({ allowGuest: true });
 
-		const { user } = sessionValidationRes.data as any;
+    if (!sessionValidationRes.success) return APIResponse(sessionValidationRes);
 
-		let userId = req.nextUrl.searchParams.get("userId");
+    const { user } = sessionValidationRes.data as any;
 
-		if (!userId) return APIResponse(RESPONSES.INTERNAL_ERROR);
+    let userId = req.nextUrl.searchParams.get("userId");
 
-		if (userId === "me")
-			return APIResponse(
-				RESPONSES.SUCCESS({
-					user: safeUserResponse(user),
-					isMe: true,
-				})
-			);
+    if (!userId) return APIResponse(RESPONSES.INTERNAL_ERROR);
 
-		if (!mongoose.isValidObjectId(userId))
-			return APIResponse(RESPONSES.INVALID_USERID());
+    if (userId === "me")
+      return APIResponse(
+        RESPONSES.SUCCESS({
+          user: safeUserResponse(user),
+          isMe: true,
+        })
+      );
 
-		const foundUser = await User.findById(userId);
-		if (!foundUser) return APIResponse(RESPONSES.INTERNAL_ERROR);
+    if (!mongoose.isValidObjectId(userId)) return APIResponse(RESPONSES.INVALID_USERID());
 
-		return APIResponse(
-			RESPONSES.SUCCESS({
-				user: safeUserResponse(foundUser),
-				isMe: false,
-			})
-		);
-	} catch (error) {
-		console.log("Error getting user : \n", error);
-		return APIResponse(RESPONSES.INTERNAL_ERROR);
-	}
+    const foundUser = await User.findById(userId);
+    if (!foundUser) return APIResponse(RESPONSES.INTERNAL_ERROR);
+
+    return APIResponse(
+      RESPONSES.SUCCESS({
+        user: safeUserResponse(foundUser),
+        isMe: false,
+      })
+    );
+  } catch (error) {
+    console.log("Error getting user : \n", error);
+    return APIResponse(RESPONSES.INTERNAL_ERROR);
+  }
 }

@@ -1,67 +1,47 @@
-import {
-	Body,
-	Container,
-	Head,
-	Heading,
-	Html,
-	Link,
-	Section,
-	Text,
-} from "@react-email/components";
+import { Body, Container, Head, Heading, Html, Link, Section, Text } from "@react-email/components";
 import { constants } from "@/lib/constants";
 
-import {
-	main,
-	container,
-	tertiary,
-	secondary,
-	paragraph,
-	footer,
-	link,
-} from "./emailStyles";
+import { main, container, tertiary, secondary, paragraph, footer, link } from "./emailStyles";
 
 interface WelcomeEmailProps {
-	name: string;
-	dashboardLink: string;
+  name: string;
+  dashboardLink: string;
 }
 
 const { appName } = constants;
 
 export const WelcomeTemplate = ({ name, dashboardLink }: WelcomeEmailProps) => {
-	return (
-		<Html>
-			<Head />
-			<Body style={main}>
-				<Container style={container}>
-					{/* App Header */}
-					<Text style={tertiary}>{appName}</Text>
+  return (
+    <Html>
+      <Head />
+      <Body style={main}>
+        <Container style={container}>
+          {/* App Header */}
+          <Text style={tertiary}>{appName}</Text>
 
-					{/* Heading */}
-					<Heading style={secondary}>Welcome to {appName} 🎉 </Heading>
+          {/* Heading */}
+          <Heading style={secondary}>Welcome to {appName} 🎉 </Heading>
 
-					{/* Greeting */}
-					<Text style={paragraph}>Hey {name}</Text>
-					{/* Instructions */}
-					<Text style={paragraph}>
-						Welcome to {appName}! We’re excited to have you on board. Start
-						exploring and make the most out of your new account.
-					</Text>
+          {/* Greeting */}
+          <Text style={paragraph}>Hey {name}</Text>
+          {/* Instructions */}
+          <Text style={paragraph}>
+            Welcome to {appName}! We’re excited to have you on board. Start exploring and make the
+            most out of your new account.
+          </Text>
 
-					<Section style={{ textAlign: "center", margin: "20px 0" }}>
-						<Link
-							href={`${process.env.NEXT_PUBLIC_APP_URL}/${dashboardLink}`}
-							style={link}
-						>
-							Go To Dashboard
-						</Link>
-					</Section>
+          <Section style={{ textAlign: "center", margin: "20px 0" }}>
+            <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/${dashboardLink}`} style={link}>
+              Go To Dashboard
+            </Link>
+          </Section>
 
-					<br />
-				</Container>
+          <br />
+        </Container>
 
-				{/* Footer */}
-				<Text style={footer}>Securely powered by {appName}</Text>
-			</Body>
-		</Html>
-	);
+        {/* Footer */}
+        <Text style={footer}>Securely powered by {appName}</Text>
+      </Body>
+    </Html>
+  );
 };
