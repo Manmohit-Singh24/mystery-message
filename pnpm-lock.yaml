@@ -234,6 +234,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@repo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -425,6 +428,8 @@ importers:
       typescript:
         specifier: ^5
         version: 5.9.3
+
+  packages/contracts: {}
 
 packages:
 
