@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev",
+    "dev:api": "turbo dev --filter=@repo/contracts --filter=@repo/api",
     "build": "turbo build",
     "start": "turbo start",
     "lint": "turbo lint",
