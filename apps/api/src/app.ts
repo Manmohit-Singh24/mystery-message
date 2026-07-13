@@ -1,57 +1,38 @@
 import express from "express";
-import { errorHandler } from "@/middleware/error.js";
-import { AppError } from "./shared/errors/index.js";
-import { ErrorCode } from "@repo/contracts";
-
-import helmet from "helmet";
 import cors from "cors";
-import { env } from "./config/env.js";
+import helmet from "helmet";
 import compression from "compression";
-import { requestLogger } from "./middleware/requestLogger.js";
-import { healthRouter } from "./modules/health/health.routes.js";
 import cookieParser from "cookie-parser";
+
+import { env } from "@/config/env.js";
+import { requestLogger } from "@/middleware/requestLogger.js";
+import { healthRouter } from "@/modules/health/health.routes.js";
+import { errorHandler } from "@/middleware/error.js";
+import { NotFoundError } from "@/shared/errors/index.js";
 
 const app = express();
 
+// Security
 app.use(helmet());
+app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
+
+// Request Parsing
+app.use(cookieParser());
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(compression());
 
-app.use(
-  cors({
-    origin: env.CLIENT_URL,
-    credentials: true,
-  })
-);
-
-app.use(
-  express.json({
-    limit: "100kb",
-  })
-);
-
-app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "100kb",
-  })
-);
-
-app.use(cookieParser());
-
+// Observability
 app.use(requestLogger);
 
-app.get("/", (_req, res) => {
-  return res.json({
-    message: "Hello from api",
-  });
-});
-
-app.get("/test-error", (_req, res) => {
-  throw new AppError(504, ErrorCode.CONFLICT, "Error Handler Tested Successfully");
-});
-
+// Routes
 app.use("/health", healthRouter);
 
+app.use((_req) => {
+  throw new NotFoundError("Route not found");
+});
+
+// Error Handler
 app.use(errorHandler);
 
-export default app;
+export { app };

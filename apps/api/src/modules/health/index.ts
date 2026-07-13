@@ -1,2 +1,2 @@
-export * from "./health.controller.js";
-export * from "./health.routes.js";
+export { healthController } from "./health.controller.js";
+export { healthRouter } from "./health.routes.js";

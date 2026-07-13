@@ -3,13 +3,15 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev",
-    "dev:api": "turbo dev --filter=@repo/contracts --filter=@repo/api",
     "build": "turbo build",
     "start": "turbo start",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
     "format": "turbo format",
-    "format:check": "turbo format:check"
+    "format:check": "turbo format:check",
+    "dev:api": "turbo dev --filter=@repo/contracts --filter=@repo/api"
   },
   "devEngines": {
     "packageManager": {

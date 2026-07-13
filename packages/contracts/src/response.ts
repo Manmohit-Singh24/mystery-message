@@ -1,6 +1,6 @@
 import type { ErrorCode } from "./errorCodes.js";
 
-export interface ErrorResponse {
+interface ErrorResponse {
   success: false;
 
   error: {
@@ -9,10 +9,11 @@ export interface ErrorResponse {
   };
 }
 
-export interface SuccessResponse<T> {
+interface SuccessResponse<T> {
   success: true;
-
   data: T;
 }
 
-export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+
+export type { SuccessResponse, ApiResponse, ErrorResponse };

@@ -1,19 +1,24 @@
 import pino, { type LoggerOptions } from "pino";
+
 import { env } from "@/config/env.js";
 
+const IS_DEVELOPMENT = env.NODE_ENV === "development";
+
 const options: LoggerOptions = {
-  level: env.NODE_ENV === "development" ? "debug" : "info",
+  level: IS_DEVELOPMENT ? "debug" : "info",
 };
 
-if (env.NODE_ENV === "development") {
+if (IS_DEVELOPMENT) {
   options.transport = {
     target: "pino-pretty",
     options: {
       colorize: true,
-      translateTime: "HH:MM:ss",
+      translateTime: "dd/mm/yyyy - HH:MM:ss",
       ignore: "pid,hostname",
     },
   };
 }
 
-export const logger = pino(options);
+const logger = pino(options);
+
+export { logger };
