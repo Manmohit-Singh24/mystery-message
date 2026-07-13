@@ -9,6 +9,7 @@ import { env } from "./config/env.js";
 import compression from "compression";
 import { requestLogger } from "./middleware/requestLogger.js";
 import { healthRouter } from "./modules/health/health.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -18,10 +19,25 @@ app.use(compression());
 app.use(
   cors({
     origin: env.CLIENT_URL,
+    credentials: true,
   })
 );
 
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "100kb",
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "100kb",
+  })
+);
+
+app.use(cookieParser());
+
 app.use(requestLogger);
 
 app.get("/", (_req, res) => {
