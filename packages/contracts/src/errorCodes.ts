@@ -9,6 +9,7 @@ export const ErrorCode = {
   NOT_FOUND: "NOT_FOUND",
 
   CONFLICT: "CONFLICT",
+  BAD_REQUEST: "BAD_REQUEST",
 } as const;
 
 //(typeof SomeObject)[keyof typeof SomeObject]; give type as Union of all values of SomeObject.

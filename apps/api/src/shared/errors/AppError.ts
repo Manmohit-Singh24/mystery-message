@@ -1,6 +1,6 @@
 import type { ErrorCode } from "@repo/contracts";
 
-export class AppError extends Error {
+class AppError extends Error {
   public readonly statusCode: number;
   public readonly code: ErrorCode;
 
@@ -12,3 +12,5 @@ export class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+
+export { AppError };

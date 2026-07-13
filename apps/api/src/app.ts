@@ -1,6 +1,6 @@
 import express from "express";
 import { errorHandler } from "@/middleware/error.js";
-import { AppError } from "./shared/errors/AppError.js";
+import { AppError } from "./shared/errors/index.js";
 import { ErrorCode } from "@repo/contracts";
 
 import helmet from "helmet";

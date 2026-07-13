@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { ErrorCode, type ErrorResponse } from "@repo/contracts";
 
-import { AppError } from "@/shared/errors/AppError.js";
+import { AppError } from "@/shared/errors/index.js";
 import { logger } from "@/shared/logger.js";
 
 export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
