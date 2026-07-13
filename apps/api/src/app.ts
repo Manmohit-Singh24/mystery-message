@@ -7,7 +7,7 @@ import helmet from "helmet";
 import cors from "cors";
 import { env } from "./config/env.js";
 import compression from "compression";
-
+import { requestLogger } from "./middleware/requestLogger.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 
 const app = express();
@@ -22,6 +22,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(requestLogger);
 
 app.get("/", (_req, res) => {
   return res.json({
