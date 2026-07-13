@@ -7,9 +7,9 @@
 
     "types": ["node"],
     "paths": {
-      "@/*": ["./src/*"],
-    },
+      "@/*": ["./src/*"]
+    }
   },
 
-  "include": ["src", "src/modules/health"],
+  "include": ["src", "src/modules/health"]
 }

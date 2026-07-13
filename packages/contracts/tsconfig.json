@@ -8,8 +8,8 @@
     "declaration": true,
     "declarationMap": true,
 
-    "types": [],
+    "types": []
   },
 
-  "include": ["src"],
+  "include": ["src"]
 }

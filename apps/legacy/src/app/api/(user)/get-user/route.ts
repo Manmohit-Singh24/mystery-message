@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
     const { user } = sessionValidationRes.data as any;
 
-    let userId = req.nextUrl.searchParams.get("userId");
+    const userId = req.nextUrl.searchParams.get("userId");
 
     if (!userId) return APIResponse(RESPONSES.INTERNAL_ERROR);
 
