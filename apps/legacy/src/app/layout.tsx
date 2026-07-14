@@ -8,32 +8,32 @@ import AuthWatcher from "@/components/AuthWatcher";
 import ThemeProvider from "@/components/ThemesProvider";
 
 export const metadata: Metadata = {
-	title: constants.appName,
-	description: constants.description,
+  title: constants.appName,
+  description: constants.description,
 };
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<html lang="en" className="scroll-smooth bg-background">
-			<body>
-				<AuthProvider>
-					<AuthWatcher />
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
-						<Navbar />
-						<main className="mt-16">{children}</main>
-					</ThemeProvider>
-					<Toaster />
-				</AuthProvider>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" className="scroll-smooth bg-background">
+      <body>
+        <AuthProvider>
+          <AuthWatcher />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="mt-16">{children}</main>
+          </ThemeProvider>
+          <Toaster />
+        </AuthProvider>
+      </body>
+    </html>
+  );
 }

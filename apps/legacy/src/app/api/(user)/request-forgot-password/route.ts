@@ -9,81 +9,79 @@ import { generateCode } from "@/lib/generateCode";
 import bcrypt from "bcrypt";
 
 const RESPONSES = {
-	SUCCESS: (email: string) => ({
-		success: true,
-		message: `If an account exists with ${email}, you'll receive an email shortly.`,
-		status: 200,
-	}),
+  SUCCESS: (email: string) => ({
+    success: true,
+    message: `If an account exists with ${email}, you'll receive an email shortly.`,
+    status: 200,
+  }),
 
-	INVALID_REQUEST: (msg?: string) => ({
-		success: false,
-		message: msg || "Invalid request",
-		status: 400,
-	}),
+  INVALID_REQUEST: (msg?: string) => ({
+    success: false,
+    message: msg || "Invalid request",
+    status: 400,
+  }),
 
-	INTERNAL_ERROR: {
-		success: false,
-		message: "Some internal error occurred while requesting password reset",
-		status: 500,
-	},
+  INTERNAL_ERROR: {
+    success: false,
+    message: "Some internal error occurred while requesting password reset",
+    status: 500,
+  },
 };
 export async function GET(req: NextRequest) {
-	await dbConnect();
+  await dbConnect();
 
-	try {
-		const email = req.nextUrl.searchParams.get("email")?.trim().toLowerCase();
+  try {
+    const email = req.nextUrl.searchParams.get("email")?.trim().toLowerCase();
 
-		if (!email) return APIResponse(RESPONSES.INVALID_REQUEST());
+    if (!email) return APIResponse(RESPONSES.INVALID_REQUEST());
 
-		const validateResEmail = emailValidation.safeParse(email);
-		if (!validateResEmail.success) {
-			const zodErrorMsg = JSON.parse(validateResEmail.error.message)[0]
-				?.message;
-			return APIResponse(RESPONSES.INVALID_REQUEST(zodErrorMsg));
-		}
+    const validateResEmail = emailValidation.safeParse(email);
+    if (!validateResEmail.success) {
+      const zodErrorMsg = JSON.parse(validateResEmail.error.message)[0]?.message;
+      return APIResponse(RESPONSES.INVALID_REQUEST(zodErrorMsg));
+    }
 
-		const user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-		// We will be sending success even for many invalid cases to prevent brute force attacks and trick hackers.
+    // We will be sending success even for many invalid cases to prevent brute force attacks and trick hackers.
 
-		if (!user) return APIResponse(RESPONSES.SUCCESS(email));
+    if (!user) return APIResponse(RESPONSES.SUCCESS(email));
 
-		// Token is still valid, don't send new one
-		if (user.passwordResetToken && user.passwordResetExpiry > new Date())
-			return APIResponse(RESPONSES.SUCCESS(email));
+    // Token is still valid, don't send new one
+    if (user.passwordResetToken && user.passwordResetExpiry > new Date())
+      return APIResponse(RESPONSES.SUCCESS(email));
 
-		// If expired, enforce 1-day cooldown
-		if (
-			user.passwordResetExpiry &&
-			Date.now() - user.passwordResetExpiry.getTime() < 24 * 60 * 60 * 1000
-		)
-			return APIResponse(RESPONSES.SUCCESS(email));
+    // If expired, enforce 1-day cooldown
+    if (
+      user.passwordResetExpiry &&
+      Date.now() - user.passwordResetExpiry.getTime() < 24 * 60 * 60 * 1000
+    )
+      return APIResponse(RESPONSES.SUCCESS(email));
 
-		const passwordResetToken = generateCode(32);
-		const dbPasswordResetToken = await bcrypt.hash(passwordResetToken, 10);
-		const updatedUser = await user.updateOne({
-			passwordResetToken: dbPasswordResetToken,
-			passwordResetExpiry: new Date(Date.now() + 10 * 60 * 1000),
-		});
+    const passwordResetToken = generateCode(32);
+    const dbPasswordResetToken = await bcrypt.hash(passwordResetToken, 10);
+    const updatedUser = await user.updateOne({
+      passwordResetToken: dbPasswordResetToken,
+      passwordResetExpiry: new Date(Date.now() + 10 * 60 * 1000),
+    });
 
-		if (updatedUser.modifiedCount === 0)
-			return APIResponse(RESPONSES.INTERNAL_ERROR);
+    if (updatedUser.modifiedCount === 0) return APIResponse(RESPONSES.INTERNAL_ERROR);
 
-		const emailConfig: emailConfig = {
-			to: user.email,
-			subject: "Password Reset",
-			react: PasswordResetEmailTemplate({
-				name: user.username,
-				resetUrl: `/reset-password?userId=${user._id}&token=${passwordResetToken}`,
-			}),
-		};
+    const emailConfig: emailConfig = {
+      to: user.email,
+      subject: "Password Reset",
+      react: PasswordResetEmailTemplate({
+        name: user.username,
+        resetUrl: `/reset-password?userId=${user._id}&token=${passwordResetToken}`,
+      }),
+    };
 
-		await sendEmail(emailConfig);
+    await sendEmail(emailConfig);
 
-		return APIResponse(RESPONSES.SUCCESS(email));
-	} catch (error) {
-		console.log("Error requesting forgot password : \n", error);
+    return APIResponse(RESPONSES.SUCCESS(email));
+  } catch (error) {
+    console.log("Error requesting forgot password : \n", error);
 
-		return APIResponse(RESPONSES.INTERNAL_ERROR);
-	}
+    return APIResponse(RESPONSES.INTERNAL_ERROR);
+  }
 }
