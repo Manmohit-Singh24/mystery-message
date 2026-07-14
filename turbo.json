@@ -8,17 +8,13 @@
     },
 
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "typecheck"],
       "outputs": [".next/**", "dist/**"]
     },
 
     "start": { "dependsOn": ["^build", "build"] },
     "test": { "dependsOn": ["^build", "build"] },
 
-    "typecheck": { "dependsOn": ["^build"] },
-    "lint": {},
-    "lint:fix": {},
-    "format": { "cache": false },
-    "format:check": {}
+    "typecheck": { "dependsOn": ["^build"] }
   }
 }
