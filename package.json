@@ -9,7 +9,7 @@
     "typecheck": "turbo typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier . --write",
+    "format": "prettier . --write &&  pnpm --filter @repo/api prisma:format",
     "format:check": "prettier . --check",
     "dev:api": "turbo dev --filter=@repo/contracts --filter=@repo/api",
     "prepare": "husky"
@@ -19,7 +19,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json,md,yml,yaml}": [
+    "*.{json,md,yml,yaml,prisma}": [
       "prettier --write"
     ]
   },

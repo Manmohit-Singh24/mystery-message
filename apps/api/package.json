@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier . --write",
+    "format": "prettier . --write && prisma format",
+    "prisma:format": "prisma format",
     "format:check": "prettier . --check"
   },
   "dependencies": {

@@ -29,21 +29,6 @@ app.use(requestLogger);
 // Routes
 app.use("/health", healthRouter);
 
-// temp prisma test
-app.post("/db-test-msg", async (req, res) => {
-  const msg: string = req.body.msg ?? "";
-
-  const dbRes = await prisma.sample.create({
-    data: { msg },
-  });
-
-  res.status(200).json({
-    success: true,
-    message: "message added successfully",
-    data: dbRes,
-  });
-});
-
 app.use((_req) => {
   throw new NotFoundError("Route not found");
 });

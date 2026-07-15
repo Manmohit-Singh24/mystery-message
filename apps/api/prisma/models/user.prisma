@@ -1,0 +1,38 @@
+enum UserStatus {
+  UNVERIFIED
+  ACTIVE
+  DEACTIVATED
+  DELETION_SCHEDULED
+}
+
+enum TokenPurpose {
+  ACTIVATION
+  PASSWORD_RESET
+}
+
+model User {
+  id       String @id @default(cuid())
+  publicId String @unique
+
+  name         String
+  username     String @unique
+  email        String @unique
+  passwordHash String
+
+  isAcceptingMessages Boolean @default(true)
+
+  status              UserStatus @default(UNVERIFIED)
+  deletionScheduledAt DateTime?
+
+  verificationTokenHash String?
+  tokenPurpose          TokenPurpose?
+  tokenExpiresAt        DateTime?
+
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
