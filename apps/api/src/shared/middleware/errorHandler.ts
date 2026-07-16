@@ -4,7 +4,7 @@ import { ErrorCode, type ErrorResponse } from "@repo/contracts";
 
 import { AppError } from "@/shared/errors/index.js";
 import { logger } from "@/shared/logger.js";
-import { mapPrismaError } from "@/shared/error-handlers/prisma.js";
+import { mapPrismaError } from "@/shared/errors/mappers/index.js";
 
 const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   // handling Prisma Error

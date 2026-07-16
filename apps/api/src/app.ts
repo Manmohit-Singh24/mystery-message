@@ -5,11 +5,9 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 
 import { env } from "@/config/env.js";
-import { requestLogger } from "@/middleware/requestLogger.js";
+import { requestLogger, errorHandler } from "@/shared/middleware/index.js";
 import { healthRouter } from "@/modules/health/health.routes.js";
-import { errorHandler } from "@/middleware/error.js";
 import { NotFoundError } from "@/shared/errors/index.js";
-import { prisma } from "@/db/prisma.js";
 
 const app = express();
 
