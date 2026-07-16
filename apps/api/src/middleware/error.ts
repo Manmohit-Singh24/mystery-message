@@ -4,21 +4,25 @@ import { ErrorCode, type ErrorResponse } from "@repo/contracts";
 
 import { AppError } from "@/shared/errors/index.js";
 import { logger } from "@/shared/logger.js";
+import { mapPrismaError } from "@/shared/error-handlers/prisma.js";
 
-const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  if (err instanceof AppError) {
-    if (err.statusCode >= 500) logger.error(err);
+const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  // handling Prisma Error
+  const error = mapPrismaError(err) ?? err;
 
-    return res.status(err.statusCode).json({
+  if (error instanceof AppError) {
+    if (error.statusCode >= 500) logger.error(err);
+
+    return res.status(error.statusCode).json({
       success: false,
       error: {
-        code: err.code,
-        message: err.message,
+        code: error.code,
+        message: error.message,
       },
     } satisfies ErrorResponse);
   }
 
-  logger.error(err);
+  logger.error(error);
   return res.status(500).json({
     success: false,
     error: {
