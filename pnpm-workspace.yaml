@@ -3,8 +3,10 @@ packages:
   - "packages/*"
   - "!apps/legacy"
 allowBuilds:
+  "@prisma/engines": true
   bcrypt: true
   esbuild: true
   msw: true
+  prisma: true
   sharp: true
   unrs-resolver: true

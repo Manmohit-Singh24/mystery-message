@@ -9,6 +9,7 @@ import { requestLogger } from "@/middleware/requestLogger.js";
 import { healthRouter } from "@/modules/health/health.routes.js";
 import { errorHandler } from "@/middleware/error.js";
 import { NotFoundError } from "@/shared/errors/index.js";
+import { prisma } from "@/db/prisma.js";
 
 const app = express();
 
