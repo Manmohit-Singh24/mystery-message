@@ -8,6 +8,7 @@ import { env } from "@/config/env.js";
 import { requestLogger, errorHandler } from "@/shared/middleware/index.js";
 import { healthRouter } from "@/modules/health/health.routes.js";
 import { NotFoundError } from "@/shared/errors/index.js";
+import { resolveAuth } from "./modules/auth/index.js";
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use(requestLogger);
 
 // Routes
 app.use("/health", healthRouter);
+
+app.use(resolveAuth);
 
 app.use((_req) => {
   throw new NotFoundError("Route not found");
