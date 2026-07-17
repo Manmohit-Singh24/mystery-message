@@ -10,5 +10,12 @@ const registerSchema = z.object({
 
 type RegisterDto = z.infer<typeof registerSchema>;
 
+type RegisterResponse = {
+  name: string;
+  email: string;
+  username: string;
+  publicId: string;
+};
+
 export { registerSchema };
-export type { RegisterDto };
+export type { RegisterDto, RegisterResponse };

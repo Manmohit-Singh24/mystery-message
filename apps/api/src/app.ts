@@ -9,6 +9,7 @@ import { requestLogger, errorHandler } from "@/shared/middleware/index.js";
 import { healthRouter } from "@/modules/health/health.routes.js";
 import { NotFoundError } from "@/shared/errors/index.js";
 import { resolveAuth } from "./modules/auth/index.js";
+import { authRouter } from "./modules/auth/index.js";
 
 const app = express();
 
@@ -25,10 +26,14 @@ app.use(compression());
 // Observability
 app.use(requestLogger);
 
-// Routes
+// Health Check Route
 app.use("/health", healthRouter);
 
+// Auth middleware
 app.use(resolveAuth);
+
+// App routes
+app.use("/auth", authRouter);
 
 app.use((_req) => {
   throw new NotFoundError("Route not found");
