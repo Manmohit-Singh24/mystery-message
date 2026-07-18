@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
-import { register } from "./services/index.js";
-import type { SuccessResponse, RegisterResponse } from "@repo/contracts";
+import { register, login } from "./services/index.js";
+import type { SuccessResponse, RegisterResponse, LoginResponse } from "@repo/contracts";
+import { setAccessCookie, setRefreshCookie } from "./cookies/index.js";
+import { generateAccessToken } from "./jwt/access.js";
 
 const registerController = async (req: Request, res: Response) => {
   const user = await register(req.body);
@@ -11,4 +13,26 @@ const registerController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<RegisterResponse>);
 };
 
-export { registerController };
+const loginController = async (req: Request, res: Response) => {
+  const ip = req.ip;
+  const userAgent = req.get("User-Agent");
+
+  const { user, session } = await login(req.body, { ip, userAgent });
+
+  const accessToken = generateAccessToken({ userId: user.id, sessionId: session.id });
+
+  setAccessCookie(res, accessToken);
+  setRefreshCookie(res, session.refreshToken);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      publicId: user.publicId,
+    },
+  } satisfies SuccessResponse<LoginResponse>);
+};
+
+export { registerController, loginController };

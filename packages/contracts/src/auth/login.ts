@@ -8,5 +8,12 @@ const loginSchema = z.object({
 
 type LoginDto = z.infer<typeof loginSchema>;
 
+type LoginResponse = {
+  name: string;
+  email: string;
+  username: string;
+  publicId: string;
+};
+
 export { loginSchema };
-export type { LoginDto };
+export type { LoginDto, LoginResponse };
