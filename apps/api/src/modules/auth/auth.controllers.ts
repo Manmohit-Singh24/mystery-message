@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import type { SuccessResponse, RegisterResponse, LoginResponse } from "@repo/contracts";
 
-import { register, login, logout } from "./services/index.js";
+import { register, login, logout, verifyEmail } from "./services/index.js";
 import {
   clearAccessCookie,
   clearRefreshCookie,
@@ -54,4 +54,13 @@ const logoutController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
-export { registerController, loginController, logoutController };
+const verifyEmailController = async (req: Request, res: Response) => {
+  await verifyEmail(req.body);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
+export { registerController, loginController, logoutController, verifyEmailController };

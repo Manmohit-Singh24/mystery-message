@@ -11,6 +11,7 @@ import { ConflictError } from "@/shared/errors/ConflictError.js";
 
 import { hashPassword } from "../crypto/password.js";
 import { generateSecureToken, hashToken } from "../crypto/token.js";
+import { logger } from "@/shared/logger.js";
 
 const register = async (dto: RegisterDto) => {
   const { name, username, email, password } = dto;
@@ -71,6 +72,8 @@ const register = async (dto: RegisterDto) => {
       },
     });
   });
+
+  logger.warn(`Temperoraily printing code here until email is configured , ${activationCode}`);
 
   // TODO (EMAIL) : send activation code via email here
 

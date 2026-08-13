@@ -24,7 +24,7 @@ model User {
   status              UserStatus @default(UNVERIFIED)
   deletionScheduledAt DateTime?
 
-  verificationTokenHash String?
+  verificationTokenHash String?       @unique
   tokenPurpose          TokenPurpose?
   tokenExpiresAt        DateTime?
 
