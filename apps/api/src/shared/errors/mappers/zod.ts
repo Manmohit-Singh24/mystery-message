@@ -1,6 +1,7 @@
 import { ZodError } from "zod";
 
-import { type AppError, type ErrorFields, BadRequestError } from "@/shared/errors/index.js";
+import { type AppError, BadRequestError } from "@/shared/errors/index.js";
+import { type ErrorFields } from "@repo/contracts";
 
 const mapZodError = (err: unknown): AppError | null => {
   if (!(err instanceof ZodError)) return null;
