@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { loginSchema, registerSchema, verifyEmailSchema } from "@repo/contracts";
+import {
+  loginSchema,
+  registerSchema,
+  resendVerificationSchema,
+  verifyEmailSchema,
+} from "@repo/contracts";
 
 import { validateBody } from "@/shared/middleware/validate.js";
 
@@ -8,6 +13,7 @@ import {
   registerController,
   logoutController,
   verifyEmailController,
+  resendVerificationController,
 } from "./auth.controllers.js";
 import { requireAuth, requireUnAuth } from "./middleware/authGaurds.js";
 
@@ -17,5 +23,10 @@ authRouter.post("/register", requireUnAuth, validateBody(registerSchema), regist
 authRouter.post("/login", requireUnAuth, validateBody(loginSchema), loginController);
 authRouter.post("/logout", requireAuth, logoutController);
 authRouter.post("/verify-email", validateBody(verifyEmailSchema), verifyEmailController);
+authRouter.post(
+  "/resend-verification",
+  validateBody(resendVerificationSchema),
+  resendVerificationController
+);
 
 export { authRouter };

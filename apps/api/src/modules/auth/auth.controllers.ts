@@ -10,6 +10,7 @@ import {
   setRefreshCookie,
 } from "./cookies/index.js";
 import { generateAccessToken } from "./jwt/access.js";
+import { resendVerification } from "./services/resendVerification.js";
 
 const registerController = async (req: Request, res: Response) => {
   const user = await register(req.body);
@@ -63,4 +64,19 @@ const verifyEmailController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
-export { registerController, loginController, logoutController, verifyEmailController };
+const resendVerificationController = async (req: Request, res: Response) => {
+  await resendVerification(req.body);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
+export {
+  registerController,
+  loginController,
+  logoutController,
+  verifyEmailController,
+  resendVerificationController,
+};
