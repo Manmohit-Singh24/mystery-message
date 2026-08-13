@@ -1,7 +1,14 @@
 import type { Request, Response } from "express";
-import { register, login } from "./services/index.js";
+
 import type { SuccessResponse, RegisterResponse, LoginResponse } from "@repo/contracts";
-import { setAccessCookie, setRefreshCookie } from "./cookies/index.js";
+
+import { register, login, logout } from "./services/index.js";
+import {
+  clearAccessCookie,
+  clearRefreshCookie,
+  setAccessCookie,
+  setRefreshCookie,
+} from "./cookies/index.js";
 import { generateAccessToken } from "./jwt/access.js";
 
 const registerController = async (req: Request, res: Response) => {
@@ -35,4 +42,16 @@ const loginController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<LoginResponse>);
 };
 
-export { registerController, loginController };
+const logoutController = async (req: Request, res: Response) => {
+  await logout(req.auth!);
+
+  clearAccessCookie(res);
+  clearRefreshCookie(res);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
+export { registerController, loginController, logoutController };
