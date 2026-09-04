@@ -12,6 +12,8 @@ import { ConflictError } from "@/shared/errors/ConflictError.js";
 import { hashPassword } from "../crypto/password.js";
 import { generateSecureToken, hashToken } from "../crypto/token.js";
 import { logger } from "@/shared/logger.js";
+import { sendEmail, templateNames } from "@/shared/mail/index.js";
+import { env } from "@/config/env.js";
 
 const register = async (dto: RegisterDto) => {
   const { name, username, email, password } = dto;
@@ -73,10 +75,19 @@ const register = async (dto: RegisterDto) => {
     });
   });
 
-  logger.warn(`Temperoraily printing code here until email is configured , ${activationCode}`);
+  if (env.NODE_ENV === "development")
+    logger.warn(`Only printing in dev env, for testing , ${activationCode}`);
 
   // TODO (EMAIL) : send activation code via email here
-
+  await sendEmail({
+    to: user.email,
+    template: templateNames.verifyEmail,
+    data: {
+      name: user.name,
+      verificationUrl: `${env.CLIENT_URL}/auth/verify-email?token=${activationCode}`,
+      date: activationDeadline,
+    },
+  });
   return user;
 };
 

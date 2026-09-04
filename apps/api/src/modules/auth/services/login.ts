@@ -12,6 +12,8 @@ import { ForbiddenError, BadRequestError } from "@/shared/errors/index.js";
 import { verifyPassword } from "../crypto/password.js";
 import { generateSecureToken, hashToken } from "../crypto/token.js";
 
+import { sendEmail, templateNames } from "@/shared/mail/index.js";
+
 const login = async (
   dto: LoginDto,
   deviceInfo: { ip: string | undefined; userAgent: string | undefined }
@@ -64,7 +66,15 @@ const login = async (
     return session;
   });
 
-  // TODO (EMAIL) : send login 'Welcome' or reactivation 'Welcome Back' email here
+  await sendEmail({
+    to: user.email,
+    template: isReactivation ? templateNames.reWelcome : templateNames.loginAlert,
+    data: {
+      name: user.name,
+      time: new Date(Date.now()),
+      deviceInfo: userAgent || "",
+    },
+  });
 
   return {
     user: {

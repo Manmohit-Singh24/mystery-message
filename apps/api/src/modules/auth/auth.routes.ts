@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type NextFunction, type Request, type Response } from "express";
 import {
   loginSchema,
   registerSchema,
@@ -27,6 +27,18 @@ authRouter.post(
   "/resend-verification",
   validateBody(resendVerificationSchema),
   resendVerificationController
+);
+
+// temporary endpoint to use as email link (until frontend is not ready)
+authRouter.get(
+  "/verify-email",
+  (req: Request, _res: Response, next: NextFunction) => {
+    const { token } = req.query;
+    req.body = { token };
+    next();
+  },
+  validateBody(verifyEmailSchema),
+  verifyEmailController
 );
 
 export { authRouter };
