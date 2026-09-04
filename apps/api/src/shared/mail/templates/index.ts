@@ -1,0 +1,30 @@
+import Handlebars from "handlebars";
+
+import { welcomeTemplate } from "./welcome.js";
+import { reWelcomeTemplate } from "./reWelcome.js";
+import { loginAlertTemplate } from "./loginAlert.js";
+import { verifyEmailTemplate } from "./verifyEmail.js";
+import { passwordResetTemplate } from "./passwordReset.js";
+import { accountDeleteAlertTemplate } from "./accountDeleteAlert.js";
+
+const templates = {
+  welcome: Handlebars.compile(welcomeTemplate),
+  reWelcome: Handlebars.compile(reWelcomeTemplate),
+  loginAlert: Handlebars.compile(loginAlertTemplate),
+  verifyEmail: Handlebars.compile(verifyEmailTemplate),
+  passwordReset: Handlebars.compile(passwordResetTemplate),
+  accountDeleteAlert: Handlebars.compile(accountDeleteAlertTemplate),
+};
+
+const templateNames = {
+  welcome: "welcome",
+  reWelcome: "reWelcome",
+  loginAlert: "loginAlert",
+  verifyEmail: "verifyEmail",
+  passwordReset: "passwordReset",
+  accountDeleteAlert: "accountDeleteAlert",
+} as const;
+
+type TemplateName = keyof typeof templates;
+
+export { templates, templateNames, type TemplateName };
