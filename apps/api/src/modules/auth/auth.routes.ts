@@ -18,6 +18,7 @@ import {
   resendVerificationController,
   forgotPasswordController,
   resetPasswordController,
+  refreshAccessTokenController,
 } from "./auth.controllers.js";
 import { requireAuth, requireUnAuth } from "./middleware/authGaurds.js";
 
@@ -34,6 +35,7 @@ authRouter.post(
 );
 authRouter.post("/forgot-password", validateBody(forgotPasswordSchema), forgotPasswordController);
 authRouter.post("/reset-password", validateBody(resetPasswordSchema), resetPasswordController);
+authRouter.post("/refresh-access-token", refreshAccessTokenController);
 
 // temporary endpoints to use as email link (until frontend is not ready)
 authRouter.get(

@@ -19,6 +19,8 @@ import {
   setRefreshCookie,
 } from "./cookies/index.js";
 import { generateAccessToken } from "./jwt/access.js";
+import { refreshAccessToken } from "./services/refreshAccessToken.js";
+import { ForbiddenError } from "@/shared/errors/ForbiddenError.js";
 
 const registerController = async (req: Request, res: Response) => {
   const user = await register(req.body);
@@ -99,6 +101,30 @@ const resetPasswordController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
+const refreshAccessTokenController = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+  const ip = req.ip;
+  const userAgent = req.get("User-Agent");
+
+  if (!refreshToken) throw new ForbiddenError("Invalid or expired token");
+
+  const {
+    userId,
+    refreshToken: newToken,
+    sessionId,
+  } = await refreshAccessToken(refreshToken, { ip, userAgent });
+
+  const accessToken = generateAccessToken({ userId, sessionId });
+
+  setAccessCookie(res, accessToken);
+  setRefreshCookie(res, newToken);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
 export {
   registerController,
   loginController,
@@ -107,4 +133,5 @@ export {
   resendVerificationController,
   forgotPasswordController,
   resetPasswordController,
+  refreshAccessTokenController,
 };
