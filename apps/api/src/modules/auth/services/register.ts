@@ -62,7 +62,7 @@ const register = async (dto: RegisterDto) => {
         publicId,
         isAcceptingMessages: false,
         status: UserStatus.UNVERIFIED,
-        verificationTokenHash: hashToken(activationCode),
+        tokenHash: hashToken(activationCode),
         tokenPurpose: TokenPurpose.ACTIVATION,
         tokenExpiresAt: activationDeadline,
       },

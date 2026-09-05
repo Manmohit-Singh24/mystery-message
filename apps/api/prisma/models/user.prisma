@@ -24,9 +24,9 @@ model User {
   status              UserStatus @default(UNVERIFIED)
   deletionScheduledAt DateTime?
 
-  verificationTokenHash String?       @unique
-  tokenPurpose          TokenPurpose?
-  tokenExpiresAt        DateTime?
+  tokenHash      String?       @unique
+  tokenPurpose   TokenPurpose?
+  tokenExpiresAt DateTime?
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")

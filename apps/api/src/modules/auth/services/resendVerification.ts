@@ -26,7 +26,7 @@ const resendVerification = async ({ email }: ResendVerificationlDto) => {
     where: { id: user.id },
     data: {
       tokenPurpose: TokenPurpose.ACTIVATION,
-      verificationTokenHash: hash,
+      tokenHash: hash,
       tokenExpiresAt: activationDeadline,
     },
   });

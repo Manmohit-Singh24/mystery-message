@@ -25,7 +25,7 @@ const forgotPassword = async ({ email }: ForgotPasswordDto) => {
     where: { email },
     data: {
       tokenPurpose: TokenPurpose.PASSWORD_RESET,
-      verificationTokenHash: hash,
+      tokenHash: hash,
       tokenExpiresAt: deadline,
     },
   });
