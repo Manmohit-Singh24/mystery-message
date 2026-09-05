@@ -1,1 +1,1 @@
-export { getUserById } from "./getUserById.js";
+export { getUserByPublicId, getUserById } from "./getUserById.js";

@@ -1,12 +1,15 @@
 import { Router } from "express";
 
-import { getUserByIdSchema } from "@repo/contracts";
+import { getUserByPublicIdSchema } from "@repo/contracts";
 
 import { validateParams } from "@/shared/middleware/validate.js";
-import { getUserByIdController } from "./user.controllers.js";
+import { getMeController, getUserByIdController } from "./user.controllers.js";
+import { requireAuth } from "../auth/index.js";
 
 const userRouter = Router();
 
-userRouter.get("/:id", validateParams(getUserByIdSchema), getUserByIdController);
+userRouter.get("/me", requireAuth, getMeController);
+
+userRouter.get("/:id", validateParams(getUserByPublicIdSchema), getUserByIdController);
 
 export { userRouter };

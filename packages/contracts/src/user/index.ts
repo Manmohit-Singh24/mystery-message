@@ -1,1 +1,7 @@
-export { getUserByIdSchema, type GetUserByIdDto, type GetUserByIdResponse } from "./getUserById.js";
+export {
+  getUserByIdSchema,
+  getUserByPublicIdSchema,
+  type GetUserByIdDto,
+  type GetUserByPublicIdDto,
+  type GetUserResponse,
+} from "./getUser.js";

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { emailSchema, nameSchema, passwordSchema, usernameSchema } from "../validation/index.js";
+import { emailSchema, nameSchema, passwordSchema, usernameSchema } from "../validation/fields.js";
 
 const registerSchema = z.object({
   name: nameSchema,
