@@ -9,6 +9,7 @@ import {
   verifyEmail,
   resendVerification,
   forgotPassword,
+  resetPassword,
 } from "./services/index.js";
 
 import {
@@ -89,6 +90,15 @@ const forgotPasswordController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
+const resetPasswordController = async (req: Request, res: Response) => {
+  await resetPassword(req.body);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
 export {
   registerController,
   loginController,
@@ -96,4 +106,5 @@ export {
   verifyEmailController,
   resendVerificationController,
   forgotPasswordController,
+  resetPasswordController,
 };

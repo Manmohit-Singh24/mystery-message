@@ -4,6 +4,7 @@ import {
   loginSchema,
   registerSchema,
   resendVerificationSchema,
+  resetPasswordSchema,
   verifyEmailSchema,
 } from "@repo/contracts";
 
@@ -16,6 +17,7 @@ import {
   verifyEmailController,
   resendVerificationController,
   forgotPasswordController,
+  resetPasswordController,
 } from "./auth.controllers.js";
 import { requireAuth, requireUnAuth } from "./middleware/authGaurds.js";
 
@@ -31,8 +33,9 @@ authRouter.post(
   resendVerificationController
 );
 authRouter.post("/forgot-password", validateBody(forgotPasswordSchema), forgotPasswordController);
+authRouter.post("/reset-password", validateBody(resetPasswordSchema), resetPasswordController);
 
-// temporary endpoint to use as email link (until frontend is not ready)
+// temporary endpoints to use as email link (until frontend is not ready)
 authRouter.get(
   "/verify-email",
   (req: Request, _res: Response, next: NextFunction) => {
@@ -43,5 +46,38 @@ authRouter.get(
   validateBody(verifyEmailSchema),
   verifyEmailController
 );
+
+authRouter.get("/reset-password", (req: Request, res: Response) => {
+  const { token } = req.query;
+
+  if (typeof token !== "string" || !token) {
+    return res.status(400).send("Invalid reset link.");
+  }
+
+  res.type("html").send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Reset Password</title>
+      </head>
+      <body>
+        <h1>Reset Password</h1>
+
+        <form method="POST" action="/auth/reset-password">
+          <input type="hidden" name="token" value="${token}"/>
+
+          <label>
+            New password:
+            <input type="password" name="newPassword" required />
+          </label>
+
+          <button type="submit">
+            Reset Password
+          </button>
+        </form>
+      </body>
+    </html>
+  `);
+});
 
 export { authRouter };

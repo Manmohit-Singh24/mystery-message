@@ -48,6 +48,11 @@ type TemplateData = {
     name: string;
     date: Date;
   };
+
+  passwordChangedAlert: {
+    name: string;
+    time: Date;
+  };
 };
 
 export { renderEmail, type TemplateData };

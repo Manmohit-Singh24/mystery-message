@@ -22,6 +22,7 @@ const subjects = {
   verifyEmail: "Verify Your Email",
   passwordReset: "Reset Your Password",
   accountDeleteAlert: "Account Deletion Alert",
+  passwordChangedAlert: "Password Changed Alert",
 } as const;
 
 const sendEmail = async <T extends TemplateName>(config: {
