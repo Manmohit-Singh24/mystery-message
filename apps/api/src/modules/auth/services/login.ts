@@ -18,6 +18,8 @@ const login = async (
   dto: LoginDto,
   deviceInfo: { ip: string | undefined; userAgent: string | undefined }
 ) => {
+  const now = new Date();
+
   const { identifier, password } = dto;
   const { ip, userAgent } = deviceInfo;
 
@@ -32,13 +34,13 @@ const login = async (
   if (user.status === UserStatus.UNVERIFIED)
     throw new ForbiddenError("Please activate account before proceeding");
 
-  const isReactivation = isReactivationLogin(user);
+  const isReactivation = isReactivationLogin(user, now);
 
   const isPasswordValid = await verifyPassword(password, user.passwordHash);
   if (!isPasswordValid) throw new BadRequestError("Invalid credentials.");
 
   const refreshToken = generateSecureToken();
-  const refreshExpiresAt = new Date(Date.now() + ms(env.SESSION_TTL));
+  const refreshExpiresAt = new Date(now.getTime() + ms(env.SESSION_TTL));
 
   const session = await prisma.$transaction(async (tx) => {
     const session = await tx.session.create({
@@ -71,7 +73,7 @@ const login = async (
     template: isReactivation ? templateNames.reWelcome : templateNames.loginAlert,
     data: {
       name: user.name,
-      time: new Date(Date.now()),
+      time: now,
       deviceInfo: userAgent || "",
     },
   });
@@ -91,14 +93,14 @@ const login = async (
   };
 };
 
-function isReactivationLogin(user: User) {
+function isReactivationLogin(user: User, now: Date) {
   if (user.status !== UserStatus.DELETION_SCHEDULED && user.status !== UserStatus.DEACTIVATED)
     return false;
 
   if (
     user.status === UserStatus.DELETION_SCHEDULED &&
     user.deletionScheduledAt &&
-    user.deletionScheduledAt < new Date(Date.now())
+    user.deletionScheduledAt < now
   )
     throw new BadRequestError("Invalid credentials");
 

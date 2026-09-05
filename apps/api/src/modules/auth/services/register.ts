@@ -16,6 +16,8 @@ import { sendEmail, templateNames } from "@/shared/mail/index.js";
 import { env } from "@/config/env.js";
 
 const register = async (dto: RegisterDto) => {
+  const now = new Date();
+
   const { name, username, email, password } = dto;
 
   // check if a verified user with this email already exists
@@ -28,7 +30,7 @@ const register = async (dto: RegisterDto) => {
   const deleteUserIds: User["id"][] = [];
 
   for (const user of existingUsers) {
-    if (isUnverifiedExpiredUser(user)) {
+    if (isUnverifiedExpiredUser(user, now)) {
       deleteUserIds.push(user.id);
       continue;
     }
@@ -40,7 +42,7 @@ const register = async (dto: RegisterDto) => {
 
   const passwordHash = await hashPassword(password);
   const activationCode = generateSecureToken();
-  const activationDeadline = new Date(Date.now() + ms("1d"));
+  const activationDeadline = new Date(now.getTime() + ms("1d"));
 
   const publicId = `usr_${nanoid(16)}`;
 
@@ -91,12 +93,12 @@ const register = async (dto: RegisterDto) => {
   return user;
 };
 
-function isUnverifiedExpiredUser(user: User) {
+function isUnverifiedExpiredUser(user: User, now: Date) {
   return (
     user.status === UserStatus.UNVERIFIED &&
     user.tokenPurpose === TokenPurpose.ACTIVATION &&
     user.tokenExpiresAt &&
-    user.tokenExpiresAt < new Date()
+    user.tokenExpiresAt < now
   );
 }
 

@@ -10,6 +10,8 @@ import { templateNames } from "@/shared/mail/index.js";
 import { hashPassword } from "../crypto/password.js";
 
 const resetPassword = async ({ token, newPassword }: ResetPasswordDto) => {
+  const now = new Date();
+
   const tokenHash = hashToken(token);
   const passwordHash = await hashPassword(newPassword);
 
@@ -18,7 +20,7 @@ const resetPassword = async ({ token, newPassword }: ResetPasswordDto) => {
       tokenHash,
       tokenPurpose: TokenPurpose.PASSWORD_RESET,
       tokenExpiresAt: {
-        gt: new Date(),
+        gt: now,
       },
     },
     data: {
@@ -43,7 +45,7 @@ const resetPassword = async ({ token, newPassword }: ResetPasswordDto) => {
     template: templateNames.passwordChangedAlert,
     data: {
       name: user.name,
-      time: new Date(Date.now()),
+      time: now,
     },
   });
 };
