@@ -2,7 +2,15 @@ import type { Request, Response } from "express";
 
 import type { SuccessResponse, RegisterResponse, LoginResponse } from "@repo/contracts";
 
-import { register, login, logout, verifyEmail } from "./services/index.js";
+import {
+  register,
+  login,
+  logout,
+  verifyEmail,
+  resendVerification,
+  forgotPassword,
+} from "./services/index.js";
+
 import {
   clearAccessCookie,
   clearRefreshCookie,
@@ -10,7 +18,6 @@ import {
   setRefreshCookie,
 } from "./cookies/index.js";
 import { generateAccessToken } from "./jwt/access.js";
-import { resendVerification } from "./services/resendVerification.js";
 
 const registerController = async (req: Request, res: Response) => {
   const user = await register(req.body);
@@ -73,10 +80,20 @@ const resendVerificationController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
+const forgotPasswordController = async (req: Request, res: Response) => {
+  await forgotPassword(req.body);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
 export {
   registerController,
   loginController,
   logoutController,
   verifyEmailController,
   resendVerificationController,
+  forgotPasswordController,
 };

@@ -23,7 +23,7 @@ export const passwordResetTemplate = `<!DOCTYPE html>
     </div>
 
     <p style="{{styles.paragraph}}">
-      This link/button is valid for next 10 mins only.
+      This link/button is valid for next 30 mins only.
     </p>
 
     <p style="{{styles.paragraph}}">

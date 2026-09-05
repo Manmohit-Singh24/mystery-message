@@ -1,5 +1,6 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
 import {
+  forgotPasswordSchema,
   loginSchema,
   registerSchema,
   resendVerificationSchema,
@@ -14,6 +15,7 @@ import {
   logoutController,
   verifyEmailController,
   resendVerificationController,
+  forgotPasswordController,
 } from "./auth.controllers.js";
 import { requireAuth, requireUnAuth } from "./middleware/authGaurds.js";
 
@@ -28,6 +30,7 @@ authRouter.post(
   validateBody(resendVerificationSchema),
   resendVerificationController
 );
+authRouter.post("/forgot-password", validateBody(forgotPasswordSchema), forgotPasswordController);
 
 // temporary endpoint to use as email link (until frontend is not ready)
 authRouter.get(
