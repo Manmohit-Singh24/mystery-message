@@ -1,10 +1,10 @@
-import { ErrorCode } from "@repo/contracts";
+import { ErrorCode, type ErrorFields } from "@repo/contracts";
 
 import { AppError } from "./AppError.js";
 
 class BadRequestError extends AppError {
-  constructor(message = "Bad request") {
-    super(400, ErrorCode.BAD_REQUEST, message);
+  constructor(message = "Bad request", errors?: ErrorFields) {
+    super(400, ErrorCode.BAD_REQUEST, message, errors);
   }
 }
 

@@ -1,10 +1,10 @@
-import { ErrorCode } from "@repo/contracts";
+import { ErrorCode, type ErrorFields } from "@repo/contracts";
 
 import { AppError } from "./AppError.js";
 
 class NotFoundError extends AppError {
-  constructor(message = "Resource not found") {
-    super(404, ErrorCode.NOT_FOUND, message);
+  constructor(message = "Resource not found", errors?: ErrorFields) {
+    super(404, ErrorCode.NOT_FOUND, message, errors);
   }
 }
 

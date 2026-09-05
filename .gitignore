@@ -31,3 +31,7 @@ next-env.d.ts
 # Vercel
 .vercel/
 **/generated/prisma
+
+# OS files
+.DS_Store
+Thumbs.db

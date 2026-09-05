@@ -8,6 +8,8 @@ import { env } from "@/config/env.js";
 import { requestLogger, errorHandler } from "@/shared/middleware/index.js";
 import { healthRouter } from "@/modules/health/health.routes.js";
 import { NotFoundError } from "@/shared/errors/index.js";
+import { resolveAuth } from "./modules/auth/index.js";
+import { authRouter } from "./modules/auth/index.js";
 
 const app = express();
 
@@ -20,12 +22,19 @@ app.use(cookieParser());
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(compression());
+app.set("trust proxy", 1);
 
 // Observability
 app.use(requestLogger);
 
-// Routes
+// Health Check Route
 app.use("/health", healthRouter);
+
+// Auth middleware
+app.use(resolveAuth);
+
+// App routes
+app.use("/auth", authRouter);
 
 app.use((_req) => {
   throw new NotFoundError("Route not found");
