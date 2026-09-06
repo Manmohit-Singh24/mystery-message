@@ -1,9 +1,15 @@
 import { Router } from "express";
 
-import { deleteProfileSchema, getUserByPublicIdSchema, updateProfileSchema } from "@repo/contracts";
+import {
+  deactivateProfileSchema,
+  deleteProfileSchema,
+  getUserByPublicIdSchema,
+  updateProfileSchema,
+} from "@repo/contracts";
 
 import { validateBody, validateParams } from "@/shared/middleware/validate.js";
 import {
+  deactivateProfileController,
   deleteProfileController,
   getMeController,
   getUserByIdController,
@@ -17,6 +23,12 @@ userRouter.get("/me", requireAuth, getMeController);
 userRouter.patch("/me", requireAuth, validateBody(updateProfileSchema), updateProfileController);
 
 userRouter.delete("/me", requireAuth, validateBody(deleteProfileSchema), deleteProfileController);
+userRouter.post(
+  "/me/deactivate",
+  requireAuth,
+  validateBody(deactivateProfileSchema),
+  deactivateProfileController
+);
 
 userRouter.get("/:id", validateParams(getUserByPublicIdSchema), getUserByIdController);
 

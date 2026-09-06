@@ -2,7 +2,13 @@ import type { Request, Response } from "express";
 
 import type { GetUserByIdDto, GetUserResponse, SuccessResponse } from "@repo/contracts";
 
-import { getUserByPublicId, getUserById, updateProfile, deleteProfile } from "./services/index.js";
+import {
+  getUserByPublicId,
+  getUserById,
+  updateProfile,
+  deleteProfile,
+  deactivateProfile,
+} from "./services/index.js";
 import { clearAccessCookie, clearRefreshCookie } from "../auth/cookies/clearCookies.js";
 
 const getUserByIdController = async (req: Request<GetUserByIdDto>, res: Response) => {
@@ -52,4 +58,24 @@ const deleteProfileController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
-export { getUserByIdController, getMeController, updateProfileController, deleteProfileController };
+const deactivateProfileController = async (req: Request, res: Response) => {
+  const { userId } = req.auth!;
+
+  await deactivateProfile(req.body, userId);
+
+  clearAccessCookie(res);
+  clearRefreshCookie(res);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
+export {
+  getUserByIdController,
+  getMeController,
+  updateProfileController,
+  deleteProfileController,
+  deactivateProfileController,
+};

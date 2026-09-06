@@ -53,6 +53,10 @@ type TemplateData = {
     name: string;
     time: Date;
   };
+
+  accountDeactivateAlert: {
+    name: string;
+  };
 };
 
 export { renderEmail, type TemplateData };
