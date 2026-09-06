@@ -1,5 +1,6 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
 import {
+  changePasswordSchema,
   forgotPasswordSchema,
   loginSchema,
   registerSchema,
@@ -19,6 +20,7 @@ import {
   forgotPasswordController,
   resetPasswordController,
   refreshAccessTokenController,
+  changePasswordController,
 } from "./auth.controllers.js";
 import { requireAuth, requireUnAuth } from "./middleware/authGaurds.js";
 
@@ -36,6 +38,13 @@ authRouter.post(
 authRouter.post("/forgot-password", validateBody(forgotPasswordSchema), forgotPasswordController);
 authRouter.post("/reset-password", validateBody(resetPasswordSchema), resetPasswordController);
 authRouter.post("/refresh-access-token", refreshAccessTokenController);
+
+authRouter.post(
+  "/change-password",
+  requireAuth,
+  validateBody(changePasswordSchema),
+  changePasswordController
+);
 
 // temporary endpoints to use as email link (until frontend is not ready)
 authRouter.get(

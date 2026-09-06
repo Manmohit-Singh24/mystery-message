@@ -5,3 +5,4 @@ export { verifyEmail } from "./verifyEmail.js";
 export { forgotPassword } from "./forgotPassword.js";
 export { resendVerification } from "./resendVerification.js";
 export { resetPassword } from "./resetPassword.js";
+export { changePassword } from "./changePassword.js";

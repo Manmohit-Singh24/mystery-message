@@ -9,3 +9,5 @@ export { resendVerificationSchema, type ResendVerificationlDto } from "./resendV
 export { forgotPasswordSchema, type ForgotPasswordDto } from "./forgotPassword.js";
 
 export { resetPasswordSchema, type ResetPasswordDto } from "./resetPassword.js";
+
+export { changePasswordSchema, type ChangePasswordDto } from "./changePassword.js";
