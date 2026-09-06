@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { identifierSchema, passwordSchema } from "../validation/index.js";
+import { identifierSchema, passwordSchema } from "../validation/fields.js";
 
 const loginSchema = z.object({
   identifier: identifierSchema,

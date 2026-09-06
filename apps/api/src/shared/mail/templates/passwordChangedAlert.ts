@@ -25,8 +25,7 @@ export const passwordChangedAlertTemplate = `<!DOCTYPE html>
 
     <p style="{{styles.paragraph}}">
       If this was you, no action is needed.<br>
-      If you did NOT change your password, please secure your account immediately by resetting your password.
-    </p>
+      If you did NOT change your password, please secure your account immediately.
     <br>
   </div>
 

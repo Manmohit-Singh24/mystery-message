@@ -7,6 +7,7 @@ import { verifyEmailTemplate } from "./verifyEmail.js";
 import { passwordResetTemplate } from "./passwordReset.js";
 import { accountDeleteAlertTemplate } from "./accountDeleteAlert.js";
 import { passwordChangedAlertTemplate } from "./passwordChangedAlert.js";
+import { accountDeactivateAlertTemplate } from "./accountDeactivateAlert.js";
 
 const templates = {
   welcome: Handlebars.compile(welcomeTemplate),
@@ -16,6 +17,7 @@ const templates = {
   passwordReset: Handlebars.compile(passwordResetTemplate),
   accountDeleteAlert: Handlebars.compile(accountDeleteAlertTemplate),
   passwordChangedAlert: Handlebars.compile(passwordChangedAlertTemplate),
+  accountDeactivateAlert: Handlebars.compile(accountDeactivateAlertTemplate),
 };
 
 const templateNames = {
@@ -26,6 +28,7 @@ const templateNames = {
   passwordReset: "passwordReset",
   accountDeleteAlert: "accountDeleteAlert",
   passwordChangedAlert: "passwordChangedAlert",
+  accountDeactivateAlert: "accountDeactivateAlert",
 } as const;
 
 type TemplateName = keyof typeof templates;

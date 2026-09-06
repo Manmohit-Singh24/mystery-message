@@ -12,31 +12,31 @@ export const accountDeleteAlertTemplate = `<!DOCTYPE html>
     <h1 style="{{styles.secondary}}">Account Deletion Alert</h1>
 
     <p style="{{styles.paragraph}}">
-      Hey {{name}}<br>
+      Hi {{name}},
     </p>
 
     <p style="{{styles.paragraph}}">
-      We received a request to delete your {{appName}}'s account. If this was you, no action is
-      needed — your account is scheduled for deletion in
-      <i><b>7 days</b></i>.
+      We received a request to delete your {{appName}} account. If you made this request,
+      no action is needed. Your account is scheduled for permanent deletion on
+      <i><b>{{formatDate date}}</b></i>.
     </p>
 
     <p style="{{styles.paragraph}}">
-      You can still change your mind. Simply log in again before
-      <i><b>{{formatDate date}}</b></i>
-      to cancel the deletion and restore your account.
+      Changed your mind? Simply log in again before the deletion date to cancel the
+      deletion and restore your account.
     </p>
 
     <div style="{{styles.codeContainer}}">
       <p style="{{styles.tertiaryDeletionDate}}">
-        Account Deletion Date:
+        Account Deletion Date
       </p>
-      <p style="{{styles.secondary}}">{{formattedDeletionDate}}</p>
+      <p style="{{styles.secondary}}">{{formatDate date}}</p>
     </div>
 
     <p style="{{styles.paragraph}}">
-      If this wasn’t you, we recommend logging in and securing your account immediately.
+      If you didn't request this deletion, log in immediately and secure your account.
     </p>
+
     <br>
   </div>
 

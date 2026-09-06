@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const subjects = {
+const subjects: Record<TemplateName, string> = {
   welcome: `Welcome to ${constants.appName}`,
   reWelcome: `Welcome Back to ${constants.appName}`,
   loginAlert: "New Login to Your Account",
@@ -23,13 +23,16 @@ const subjects = {
   passwordReset: "Reset Your Password",
   accountDeleteAlert: "Account Deletion Alert",
   passwordChangedAlert: "Password Changed Alert",
+  accountDeactivateAlert: "Account Deactivated",
 } as const;
 
-const sendEmail = async <T extends TemplateName>(config: {
+type emailConfig<T extends TemplateName> = {
   to: string;
   template: T;
   data: TemplateData[T];
-}): Promise<void> => {
+};
+
+const sendEmail = async <T extends TemplateName>(config: emailConfig<T>) => {
   try {
     const emailHtml = renderEmail(config.template, config.data);
 

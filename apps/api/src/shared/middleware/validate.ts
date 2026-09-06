@@ -15,6 +15,6 @@ export const validateParams =
 
 export const validateQuery =
   (schema: ZodObject) => (req: Request, _res: Response, next: NextFunction) => {
-    req.query = schema.parse(req.query) as Request["query"];
+    schema.parse(req.query) as Request["query"];
     next();
   };

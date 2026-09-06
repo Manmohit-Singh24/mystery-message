@@ -40,4 +40,13 @@ const identifierSchema = z
     }
   });
 
-export { usernameSchema, emailSchema, passwordSchema, nameSchema, identifierSchema };
+const userPublicIdSchema = z.string().regex(/^usr_[A-Za-z0-9_-]{16}$/);
+
+export {
+  usernameSchema,
+  emailSchema,
+  passwordSchema,
+  nameSchema,
+  identifierSchema,
+  userPublicIdSchema,
+};

@@ -10,6 +10,7 @@ import {
   resendVerification,
   forgotPassword,
   resetPassword,
+  changePassword,
 } from "./services/index.js";
 
 import {
@@ -125,6 +126,15 @@ const refreshAccessTokenController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
+const changePasswordController = async (req: Request, res: Response) => {
+  await changePassword(req.body, req.auth!);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
 export {
   registerController,
   loginController,
@@ -134,4 +144,5 @@ export {
   forgotPasswordController,
   resetPasswordController,
   refreshAccessTokenController,
+  changePasswordController,
 };

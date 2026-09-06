@@ -10,6 +10,7 @@ import { healthRouter } from "@/modules/health/health.routes.js";
 import { NotFoundError } from "@/shared/errors/index.js";
 import { resolveAuth } from "./modules/auth/index.js";
 import { authRouter } from "./modules/auth/index.js";
+import { userRouter } from "./modules/user/index.js";
 
 const app = express();
 
@@ -35,6 +36,9 @@ app.use(resolveAuth);
 
 // App routes
 app.use("/auth", authRouter);
+
+// User routes
+app.use("/user", userRouter);
 
 app.use((_req) => {
   throw new NotFoundError("Route not found");

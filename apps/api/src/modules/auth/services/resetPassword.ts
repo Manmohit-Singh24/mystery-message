@@ -15,36 +15,43 @@ const resetPassword = async ({ token, newPassword }: ResetPasswordDto) => {
   const tokenHash = hashToken(token);
   const passwordHash = await hashPassword(newPassword);
 
-  const result = await prisma.user.updateManyAndReturn({
-    where: {
-      tokenHash,
-      tokenPurpose: TokenPurpose.PASSWORD_RESET,
-      tokenExpiresAt: {
-        gt: now,
+  const updateUser = await prisma.$transaction(async (tx) => {
+    const users = await tx.user.updateManyAndReturn({
+      where: {
+        tokenHash,
+        tokenPurpose: TokenPurpose.PASSWORD_RESET,
+        tokenExpiresAt: {
+          gt: now,
+        },
       },
-    },
-    data: {
-      tokenHash: null,
-      tokenPurpose: null,
-      tokenExpiresAt: null,
-      passwordHash,
-    },
-    select: {
-      email: true,
-      username: true,
-      name: true,
-    },
+      data: {
+        tokenHash: null,
+        tokenPurpose: null,
+        tokenExpiresAt: null,
+        passwordHash,
+      },
+      select: {
+        email: true,
+        name: true,
+        id: true,
+      },
+    });
+
+    if (users.length === 0 || !users[0]) throw new NotFoundError("Invalid or expired reset token");
+
+    await tx.session.deleteMany({ where: { userId: users[0].id } });
+
+    return {
+      email: users[0].email,
+      name: users[0].name,
+    };
   });
 
-  if (result.length === 0 || !result[0]) throw new NotFoundError("Invalid or expired reset token");
-
-  const user = result[0];
-
   await sendEmail({
-    to: user.email,
+    to: updateUser.email,
     template: templateNames.passwordChangedAlert,
     data: {
-      name: user.name,
+      name: updateUser.name,
       time: now,
     },
   });
