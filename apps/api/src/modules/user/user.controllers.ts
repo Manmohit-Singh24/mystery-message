@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 
-import type { GetUserByIdDto, GetUserResponse, SuccessResponse } from "@repo/contracts";
+import type {
+  GetUserByIdDto,
+  GetUserResponse,
+  IsUsernameAvailableRespose,
+  SuccessResponse,
+} from "@repo/contracts";
 
 import {
   getUserByPublicId,
@@ -8,7 +13,9 @@ import {
   updateProfile,
   deleteProfile,
   deactivateProfile,
+  isUsernameAvailable,
 } from "./services/index.js";
+
 import { clearAccessCookie, clearRefreshCookie } from "../auth/cookies/clearCookies.js";
 
 const getUserByIdController = async (req: Request<GetUserByIdDto>, res: Response) => {
@@ -72,10 +79,23 @@ const deactivateProfileController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<null>);
 };
 
+const isUsernameAvailableController = async (req: Request, res: Response) => {
+  const { username } = req.query;
+  const avaliable = await isUsernameAvailable({ username: username as string });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      avaliable,
+    },
+  } satisfies SuccessResponse<IsUsernameAvailableRespose>);
+};
+
 export {
   getUserByIdController,
   getMeController,
   updateProfileController,
   deleteProfileController,
   deactivateProfileController,
+  isUsernameAvailableController,
 };

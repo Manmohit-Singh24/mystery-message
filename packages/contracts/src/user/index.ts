@@ -11,3 +11,9 @@ export { updateProfileSchema, type UpdateProfileDto } from "./updateProfile.js";
 export { deleteProfileSchema, type DeleteProfileDto } from "./deleteProfile.js";
 
 export { deactivateProfileSchema, type DeactivateProfileDto } from "./deactivateProfile.js";
+
+export {
+  isUsernameAvailableSchema,
+  type IsUsernameAvailableDto,
+  type IsUsernameAvailableRespose,
+} from "./isUsernameAvailable.js";

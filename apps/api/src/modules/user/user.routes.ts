@@ -4,15 +4,17 @@ import {
   deactivateProfileSchema,
   deleteProfileSchema,
   getUserByPublicIdSchema,
+  isUsernameAvailableSchema,
   updateProfileSchema,
 } from "@repo/contracts";
 
-import { validateBody, validateParams } from "@/shared/middleware/validate.js";
+import { validateBody, validateParams, validateQuery } from "@/shared/middleware/validate.js";
 import {
   deactivateProfileController,
   deleteProfileController,
   getMeController,
   getUserByIdController,
+  isUsernameAvailableController,
   updateProfileController,
 } from "./user.controllers.js";
 import { requireAuth } from "../auth/index.js";
@@ -28,6 +30,12 @@ userRouter.post(
   requireAuth,
   validateBody(deactivateProfileSchema),
   deactivateProfileController
+);
+
+userRouter.get(
+  "/is-username-available",
+  validateQuery(isUsernameAvailableSchema),
+  isUsernameAvailableController
 );
 
 userRouter.get("/:id", validateParams(getUserByPublicIdSchema), getUserByIdController);
