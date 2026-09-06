@@ -12,7 +12,7 @@ const refreshCookieOptions = {
   httpOnly: true,
   secure: env.NODE_ENV === "production",
   sameSite: "none",
-  path: "/api/auth/refresh",
+  path: "/auth/refresh-access-token",
   maxAge: ms(env.SESSION_TTL),
 } satisfies CookieOptions;
 
