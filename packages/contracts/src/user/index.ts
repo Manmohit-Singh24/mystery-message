@@ -7,3 +7,5 @@ export {
 } from "./getUser.js";
 
 export { updateProfileSchema, type UpdateProfileDto } from "./updateProfile.js";
+
+export { deleteProfileSchema, type DeleteProfileDto } from "./deleteProfile.js";
