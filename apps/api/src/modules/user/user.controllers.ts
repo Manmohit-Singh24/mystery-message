@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import type { GetUserByIdDto, GetUserResponse, SuccessResponse } from "@repo/contracts";
 
-import { getUserByPublicId, getUserById } from "./services/index.js";
+import { getUserByPublicId, getUserById, updateProfile } from "./services/index.js";
 
 const getUserByIdController = async (req: Request<GetUserByIdDto>, res: Response) => {
   const { id } = req.params;
@@ -26,4 +26,15 @@ const getMeController = async (req: Request, res: Response) => {
   } satisfies SuccessResponse<GetUserResponse>);
 };
 
-export { getUserByIdController, getMeController };
+const updateProfileController = async (req: Request, res: Response) => {
+  const { userId } = req.auth!;
+
+  await updateProfile(req.body, userId);
+
+  res.status(200).json({
+    success: true,
+    data: null,
+  } satisfies SuccessResponse<null>);
+};
+
+export { getUserByIdController, getMeController, updateProfileController };
