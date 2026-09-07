@@ -14,17 +14,15 @@ const verifyEmail = async ({ token }: VerifyEmailDto) => {
 
   const result = await prisma.user.updateManyAndReturn({
     where: {
-      tokenHash: hash,
-      tokenPurpose: "ACTIVATION",
       status: UserStatus.UNVERIFIED,
-      tokenExpiresAt: {
+      activationTokenHash: hash,
+      activationTokenExpiresAt: {
         gt: new Date(),
       },
     },
     data: {
-      tokenHash: null,
-      tokenPurpose: null,
-      tokenExpiresAt: null,
+      activationTokenHash: null,
+      activationTokenExpiresAt: null,
       status: UserStatus.ACTIVE,
       isAcceptingMessages: true,
     },

@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 import type { RegisterDto } from "@repo/contracts";
 
-import { TokenPurpose, UserStatus } from "@/generated/prisma/enums.js";
+import { UserStatus } from "@/generated/prisma/enums.js";
 import type { User } from "@/generated/prisma/client.js";
 
 import { prisma } from "@/shared/prisma.js";
@@ -64,9 +64,8 @@ const register = async (dto: RegisterDto) => {
         publicId,
         isAcceptingMessages: false,
         status: UserStatus.UNVERIFIED,
-        tokenHash: hashToken(activationCode),
-        tokenPurpose: TokenPurpose.ACTIVATION,
-        tokenExpiresAt: activationDeadline,
+        activationTokenHash: hashToken(activationCode),
+        activationTokenExpiresAt: activationDeadline,
       },
       select: {
         name: true,
@@ -80,7 +79,6 @@ const register = async (dto: RegisterDto) => {
   if (env.NODE_ENV === "development")
     logger.warn(`Only printing in dev env, for testing , ${activationCode}`);
 
-  // TODO (EMAIL) : send activation code via email here
   await sendEmail({
     to: user.email,
     template: templateNames.verifyEmail,
@@ -96,9 +94,8 @@ const register = async (dto: RegisterDto) => {
 function isUnverifiedExpiredUser(user: User, now: Date) {
   return (
     user.status === UserStatus.UNVERIFIED &&
-    user.tokenPurpose === TokenPurpose.ACTIVATION &&
-    user.tokenExpiresAt &&
-    user.tokenExpiresAt < now
+    user.activationTokenExpiresAt &&
+    user.activationTokenExpiresAt < now
   );
 }
 
