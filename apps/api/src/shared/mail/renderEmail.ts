@@ -57,6 +57,28 @@ type TemplateData = {
   accountDeactivateAlert: {
     name: string;
   };
+
+  emailChangeAuth: {
+    name: string;
+    changeEmailUrl: string;
+  };
+
+  emailChangeOtp: {
+    otp: string;
+  };
+
+  emailChangedAlert: {
+    name: string;
+    oldEmail: string;
+    newEmail: string;
+    time: Date;
+  };
+
+  emailChangedConfirmation: {
+    name: string;
+    newEmail: string;
+    time: Date;
+  };
 };
 
 export { renderEmail, type TemplateData };

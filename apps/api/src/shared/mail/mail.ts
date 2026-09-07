@@ -21,9 +21,13 @@ const subjects: Record<TemplateName, string> = {
   loginAlert: "New Login to Your Account",
   verifyEmail: "Verify Your Email",
   passwordReset: "Reset Your Password",
+  emailChangeOtp: "Verify Your New Email",
+  emailChangeAuth: "Email Change Request",
+  emailChangedAlert: "Email Address Changed",
   accountDeleteAlert: "Account Deletion Alert",
   passwordChangedAlert: "Password Changed Alert",
   accountDeactivateAlert: "Account Deactivated",
+  emailChangedConfirmation: "Email Address Changed",
 } as const;
 
 type emailConfig<T extends TemplateName> = {
