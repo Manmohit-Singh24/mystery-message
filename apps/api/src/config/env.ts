@@ -52,15 +52,17 @@ const envSchema = z
       .trim()
       .refine(isMSDuration, "SESSION_TTL is an invalid duration format"),
 
-    SMTP_HOST: z.string().trim().min(1),
+    SMTP_HOST: z.string().trim().min(1, "SMTP_HOST is required"),
 
-    SMTP_PORT: z.enum(["587", "465"]),
+    SMTP_PORT: z.enum(["587", "465"], "SMTP_PORT is invalid or missing"),
 
     SMTP_SECURE: z.enum(["true", "false"]).transform((v) => v === "true"),
 
-    SMTP_USER: z.email(),
+    SMTP_USER: z.email("SMTP_USER is required"),
 
-    SMTP_PASSWORD: z.string().trim(),
+    SMTP_PASSWORD: z.string().trim().min(1, "SMTP_PASSWORD is required"),
+
+    REDIS_URL: z.string().trim().min(1, "REDIS_URL is required."),
   })
   .superRefine((env, ctx) => {
     // Access Token must expires before Refresh Token
