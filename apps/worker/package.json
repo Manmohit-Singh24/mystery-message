@@ -1,0 +1,29 @@
+{
+  "name": "@repo/worker",
+  "version": "1.0.0",
+  "description": "Just Say Worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
+    "test": "echo \"No test specified\"",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write && prisma format",
+    "format:check": "prettier . --check"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "bullmq": "^6.3.4",
+    "dotenv": "^17.4.2",
+    "ioredis": "^6.0.0",
+    "zod": "^4.4.3"
+  }
+}
