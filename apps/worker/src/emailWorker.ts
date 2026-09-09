@@ -1,32 +1,49 @@
-import { EMAIL_QUEUE_NAME, parseEmailJobData, type EmailJobData } from "@repo/jobs/email";
-import { Worker } from "bullmq";
+import { EMAIL_QUEUE_NAME, parseEmailJobData } from "@repo/jobs/email";
+import { Job, Worker } from "bullmq";
 import { sendEmail } from "./mail/mail.js";
 import { env } from "./config/env.js";
 import { logger } from "./shared/logger.js";
+import { JobLogger } from "./shared/jobLogger.js";
 
-const emailWorker = new Worker(
-  EMAIL_QUEUE_NAME,
-  async (job) => {
-    logger.info(`Starting job - ${job.id}`);
-    const response = parseEmailJobData(job.data);
+const emailJob = async (job: Job) => {
+  const jobLogger = new JobLogger({
+    name: job.name,
+    id: job.id ?? "NULL",
+    info: {},
+  });
 
-    if (!response.success) return logger.info(`${job.id} failed - ${response.error.message}`);
+  job.jobLogger = jobLogger;
 
-    await sendEmail(response.data);
-  },
-  {
-    connection: {
-      url: env.REDIS_URL,
-    },
+  const response = parseEmailJobData(job.data);
+
+  if (!response.success) {
+    logger.error(response.error);
+    return;
   }
-);
+
+  const data = response.data;
+
+  jobLogger.options.info = {
+    to: data.to,
+    template: data.template,
+  };
+
+  await sendEmail(data);
+};
+
+const emailWorker = new Worker(EMAIL_QUEUE_NAME, emailJob, {
+  connection: {
+    url: env.REDIS_URL,
+  },
+});
 
 emailWorker.on("completed", (job) => {
-  logger.info(`Completed job - ${job.id}`);
+  job.jobLogger.complete();
 });
 
 emailWorker.on("failed", (job, err) => {
-  console.error(`Job ${job?.id} failed on attempt ${job?.attemptsMade}`, err.message);
+  if (!job) logger.error({ err }, "Job failed but no job instance was available");
+  else job.jobLogger.fail(err, { attempt: job.attemptsMade });
 });
 
 export { emailWorker };
