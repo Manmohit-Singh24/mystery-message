@@ -11,7 +11,6 @@ import { NotFoundError } from "@/shared/errors/index.js";
 import { resolveAuth } from "./modules/auth/index.js";
 import { authRouter } from "./modules/auth/index.js";
 import { userRouter } from "./modules/user/index.js";
-import { emailQueue } from "./queues/queue.js";
 
 const app = express();
 
@@ -40,25 +39,6 @@ app.use("/auth", authRouter);
 
 // User routes
 app.use("/user", userRouter);
-
-// temp queue testing
-let counter = 1;
-app.get("/test-queue", async (req, res) => {
-  const msg = req.query;
-  await emailQueue.add(
-    "test",
-    { msg, counter },
-    {
-      attempts: 3,
-      backoff: {
-        type: "exponential",
-
-        delay: 1000,
-      },
-    }
-  );
-  return res.status(200).json({ success: true, data: counter++ });
-});
 
 app.use((_req) => {
   throw new NotFoundError("Route not found");

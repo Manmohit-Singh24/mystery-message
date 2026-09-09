@@ -1,8 +1,8 @@
 import type { VerifyEmailChangeDto } from "@repo/contracts";
+import { emailTemplates } from "@repo/jobs/email";
 
 import { prisma } from "@/shared/prisma.js";
-import { sendEmail } from "@/shared/mail/mail.js";
-import { templateNames } from "@/shared/mail/index.js";
+import { createEmailJob } from "@/shared/queues/email.js";
 
 import { hashToken } from "@/modules/auth/crypto/token.js";
 
@@ -32,18 +32,18 @@ const verifyEmailChange = async (dto: VerifyEmailChangeDto) => {
   });
 
   await Promise.all([
-    sendEmail({
+    createEmailJob({
       to: newEmail,
-      template: templateNames.emailChangedConfirmation,
+      template: emailTemplates.emailChangedConfirmation,
       data: {
         name: oldUser.name,
         newEmail,
         time: now,
       },
     }),
-    sendEmail({
+    createEmailJob({
       to: oldUser.email,
-      template: templateNames.emailChangedAlert,
+      template: emailTemplates.emailChangedAlert,
       data: {
         name: oldUser.name,
         newEmail,

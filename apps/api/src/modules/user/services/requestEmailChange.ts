@@ -1,13 +1,14 @@
-import { env } from "@/config/env.js";
+import { emailTemplates } from "@repo/jobs/email";
 
 import { UserStatus } from "@/generated/prisma/enums.js";
 
-import { generateSecureToken, hashToken } from "@/modules/auth/crypto/token.js";
+import { env } from "@/config/env.js";
 
 import { NotFoundError } from "@/shared/errors/NotFoundError.js";
-import { templateNames } from "@/shared/mail/index.js";
-import { sendEmail } from "@/shared/mail/mail.js";
+import { createEmailJob } from "@/shared/queues/email.js";
 import { prisma } from "@/shared/prisma.js";
+
+import { generateSecureToken, hashToken } from "@/modules/auth/crypto/token.js";
 
 import { storeEmailChangeAuthToken } from "../redis/emailChangeAuth.js";
 
@@ -26,9 +27,9 @@ const requestEmailChange = async (id: string) => {
 
   await storeEmailChangeAuthToken(tokenHash, user.id);
 
-  await sendEmail({
+  await createEmailJob({
     to: user.email,
-    template: templateNames.emailChangeAuth,
+    template: emailTemplates.emailChangeRequest,
     data: {
       name: user.name,
       changeEmailUrl: `${env.CLIENT_URL}/user/update-email?token=${token}`,

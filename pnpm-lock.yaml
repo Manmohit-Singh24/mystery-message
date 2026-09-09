@@ -252,6 +252,9 @@ importers:
       '@repo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@repo/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       argon2:
         specifier: ^0.44.0
         version: 0.44.0
@@ -273,9 +276,6 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
-      handlebars:
-        specifier: ^4.7.9
-        version: 4.7.9
       helmet:
         specifier: ^8.3.0
         version: 8.3.0
@@ -288,9 +288,6 @@ importers:
       nanoid:
         specifier: ^6.0.0
         version: 6.0.0
-      nodemailer:
-        specifier: ^9.1.1
-        version: 9.1.1
       pg:
         specifier: ^8.22.0
         version: 8.22.0
@@ -325,9 +322,6 @@ importers:
       '@types/node':
         specifier: ^20.19.43
         version: 20.19.43
-      '@types/nodemailer':
-        specifier: ^8.0.1
-        version: 8.0.1
       '@types/pg':
         specifier: ^8.20.0
         version: 8.20.0
@@ -346,15 +340,55 @@ importers:
 
   apps/worker:
     dependencies:
+      '@repo/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
+      '@types/nodemailer':
+        specifier: ^8.0.1
+        version: 8.0.1
       bullmq:
         specifier: ^6.3.4
         version: 6.3.4(ioredis@6.0.0)(pg@8.22.0)(redis@6.2.1)
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+      handlebars:
+        specifier: ^4.7.9
+        version: 4.7.9
       ioredis:
         specifier: ^6.0.0
         version: 6.0.0
+      nodemailer:
+        specifier: ^9.1.1
+        version: 9.1.1
+      pino:
+        specifier: ^10.3.1
+        version: 10.3.1
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+      pino-pretty:
+        specifier: ^13.1.3
+        version: 13.1.3
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.0
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/contracts:
+    dependencies:
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+
+  packages/jobs:
+    dependencies:
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -368,12 +402,6 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
-
-  packages/contracts:
-    dependencies:
-      zod:
-        specifier: ^4.4.3
-        version: 4.4.3
 
 packages:
 

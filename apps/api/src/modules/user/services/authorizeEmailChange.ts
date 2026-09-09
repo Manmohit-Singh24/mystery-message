@@ -1,9 +1,9 @@
 import type { AuthorizeEmailChangeDto } from "@repo/contracts";
+import { emailTemplates } from "@repo/jobs/email";
 
 import { prisma } from "@/shared/prisma.js";
 import { BadRequestError, ConflictError, NotFoundError } from "@/shared/errors/index.js";
-import { sendEmail } from "@/shared/mail/mail.js";
-import { templateNames } from "@/shared/mail/index.js";
+import { createEmailJob } from "@/shared/queues/email.js";
 
 import { verifyPassword } from "@/modules/auth/index.js";
 import { generateSecureToken, hashToken } from "@/modules/auth/crypto/token.js";
@@ -43,9 +43,9 @@ const authorizeEmailChange = async (dto: AuthorizeEmailChangeDto) => {
     newEmail,
   });
 
-  await sendEmail({
+  await createEmailJob({
     to: newEmail,
-    template: templateNames.emailChangeOtp,
+    template: emailTemplates.emailChangeVerification,
     data: {
       otp,
     },

@@ -1,13 +1,15 @@
-import { UserStatus } from "@/generated/prisma/enums.js";
 import type { VerifyEmailDto } from "@repo/contracts";
+import { emailTemplates } from "@repo/jobs/email";
+
+import { UserStatus } from "@/generated/prisma/enums.js";
+
+import { env } from "@/config/env.js";
 
 import { prisma } from "@/shared/prisma.js";
 import { NotFoundError } from "@/shared/errors/index.js";
+import { createEmailJob } from "@/shared/queues/email.js";
 
 import { hashToken } from "../crypto/token.js";
-import { sendEmail } from "@/shared/mail/mail.js";
-import { templateNames } from "@/shared/mail/index.js";
-import { env } from "@/config/env.js";
 
 const verifyEmail = async ({ token }: VerifyEmailDto) => {
   const hash = hashToken(token);
@@ -37,9 +39,9 @@ const verifyEmail = async ({ token }: VerifyEmailDto) => {
     throw new NotFoundError("Invalid or expired verification token");
 
   const user = result[0];
-  await sendEmail({
+  await createEmailJob({
     to: user.email,
-    template: templateNames.welcome,
+    template: emailTemplates.welcome,
     data: {
       name: user.name,
       dashboardLink: `${env.CLIENT_URL}/`,

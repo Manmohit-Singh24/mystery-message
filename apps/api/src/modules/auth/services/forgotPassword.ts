@@ -1,9 +1,12 @@
-import { prisma } from "@/shared/prisma.js";
 import type { ForgotPasswordDto } from "@repo/contracts";
-import { generateSecureToken, hashToken } from "../crypto/token.js";
-import { sendEmail } from "@/shared/mail/mail.js";
-import { templateNames } from "@/shared/mail/index.js";
+import { emailTemplates } from "@repo/jobs/email";
+
 import { env } from "@/config/env.js";
+
+import { prisma } from "@/shared/prisma.js";
+import { createEmailJob } from "@/shared/queues/email.js";
+
+import { generateSecureToken, hashToken } from "../crypto/token.js";
 import { storePasswordResetToken } from "../redis/passwordReset.js";
 
 const forgotPassword = async ({ email }: ForgotPasswordDto) => {
@@ -16,9 +19,9 @@ const forgotPassword = async ({ email }: ForgotPasswordDto) => {
 
   await storePasswordResetToken(tokenHash, user.id);
 
-  await sendEmail({
+  await createEmailJob({
     to: user.email,
-    template: templateNames.passwordReset,
+    template: emailTemplates.passwordReset,
     data: {
       name: user.name,
       resetUrl: `${env.CLIENT_URL}/auth/reset-password?token=${token}`,

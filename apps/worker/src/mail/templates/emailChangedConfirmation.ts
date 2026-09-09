@@ -1,22 +1,24 @@
-export const passwordChangedAlertTemplate = `<!DOCTYPE html>
+export const emailChangedConfirmationTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Password Changed</title>
+  <title>Email Address Change Confirmed</title>
 </head>
 <body style="{{styles.main}}">
   <div style="{{styles.container}}">
     <p style="{{styles.tertiary}}">{{appName}}</p>
 
-    <h1 style="{{styles.secondary}}">Your {{appName}} password was changed</h1>
+    <h1 style="{{styles.secondary}}">Email Address Change Confirmed</h1>
+
+    <p style="{{styles.paragraph}}">Hi {{name}},</p>
 
     <p style="{{styles.paragraph}}">
-      Hey {{name}}<br>
+      Your {{appName}} account email address was successfully changed to this email address.
     </p>
 
     <p style="{{styles.paragraph}}">
-      Your {{appName}} account password was successfully changed.
+      New email: <b>{{newEmail}}</b>
     </p>
 
     <p style="{{styles.paragraph}}">
@@ -24,9 +26,9 @@ export const passwordChangedAlertTemplate = `<!DOCTYPE html>
     </p>
 
     <p style="{{styles.paragraph}}">
-      If this was you, no action is needed.<br>
-      If you did NOT change your password, please secure your account immediately.
-    <br>
+      If you made this change, no action is needed. If you did not change your email address,
+      please secure your account immediately.
+    </p>
   </div>
 
   <p style="{{styles.footer}}">Securely powered by {{appName}}</p>

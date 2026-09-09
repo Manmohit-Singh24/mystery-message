@@ -3,17 +3,15 @@ export const emailChangedAlertTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Address Changed</title>
+  <title>Your Email Address Was Changed</title>
 </head>
 <body style="{{styles.main}}">
   <div style="{{styles.container}}">
     <p style="{{styles.tertiary}}">{{appName}}</p>
 
-    <h1 style="{{styles.secondary}}">Your {{appName}} email address was changed</h1>
+    <h1 style="{{styles.secondary}}">Your Email Address Was Changed</h1>
 
-    <p style="{{styles.paragraph}}">
-      Hey {{name}}<br>
-    </p>
+    <p style="{{styles.paragraph}}">Hi {{name}},</p>
 
     <p style="{{styles.paragraph}}">
       The email address associated with your {{appName}} account was successfully changed.
@@ -29,8 +27,8 @@ export const emailChangedAlertTemplate = `<!DOCTYPE html>
     </p>
 
     <p style="{{styles.paragraph}}">
-      If you made this change, no action is needed.<br>
-      If you did NOT change your email address, please secure your account immediately.
+      If you made this change, no action is needed. If you did not change your email address,
+      please secure your account immediately.
     </p>
   </div>
 

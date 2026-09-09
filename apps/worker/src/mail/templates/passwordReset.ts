@@ -11,9 +11,11 @@ export const passwordResetTemplate = `<!DOCTYPE html>
 
     <h1 style="{{styles.secondary}}">Reset Your Password</h1>
 
+    <p style="{{styles.paragraph}}">Hi {{name}},</p>
+
     <p style="{{styles.paragraph}}">
-      Hi {{name}}, we received a request to reset your password. Click the button below to set a
-      new password.
+      We received a request to reset your {{appName}} account password. Click the button below
+      to set a new password.
     </p>
 
     <div style="{{styles.centeredSection}}">
@@ -23,13 +25,12 @@ export const passwordResetTemplate = `<!DOCTYPE html>
     </div>
 
     <p style="{{styles.paragraph}}">
-      This link/button is valid for next 30 mins only.
+      This password reset link is valid for the next 30 minutes.
     </p>
 
     <p style="{{styles.paragraph}}">
       If you did not request a password reset, you can safely ignore this email.
     </p>
-    <br>
   </div>
 
   <p style="{{styles.footer}}">Securely powered by {{appName}}</p>

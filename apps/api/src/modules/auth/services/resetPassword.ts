@@ -1,11 +1,11 @@
 import type { ResetPasswordDto } from "@repo/contracts";
+import { emailTemplates } from "@repo/jobs/email";
 
 import { prisma } from "@/shared/prisma.js";
 import { NotFoundError } from "@/shared/errors/index.js";
+import { createEmailJob } from "@/shared/queues/email.js";
 
 import { hashToken } from "../crypto/token.js";
-import { sendEmail } from "@/shared/mail/mail.js";
-import { templateNames } from "@/shared/mail/index.js";
 import { hashPassword } from "../crypto/password.js";
 import { consumePasswordResetToken } from "../redis/passwordReset.js";
 
@@ -41,9 +41,9 @@ const resetPassword = async ({ token, newPassword }: ResetPasswordDto) => {
     };
   });
 
-  await sendEmail({
+  await createEmailJob({
     to: updateUser.email,
-    template: templateNames.passwordChangedAlert,
+    template: emailTemplates.passwordChangedAlert,
     data: {
       name: updateUser.name,
       time: new Date(),

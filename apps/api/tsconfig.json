@@ -11,5 +11,5 @@
     }
   },
 
-  "include": ["src", "src/modules/health"]
+  "include": ["src", "src/modules/health", "../worker/src/mail"]
 }
